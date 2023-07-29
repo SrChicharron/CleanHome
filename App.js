@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import BottomNavigation from './src/navigation/BottomNavigation';
 
 export default function App() {
-  const [userRole, setUserRole] = React.useState('trabajador');
+  const [userRole, setUserRole] = React.useState('cliente');
   
   return (
     <SafeAreaProvider >
