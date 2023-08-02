@@ -1,33 +1,13 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, SafeAreaView, StatusBar, TextInput } from 'react-native'
-import React, {useState} from 'react'
-import {FontAwesome, Foundation} from '@expo/vector-icons'
+import { View, Text, SafeAreaView, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native'
+import React from 'react'
+import { FontAwesome, Foundation } from '@expo/vector-icons'
 import ProfileImg from '../../assets/images/welcome1.jpg'
-import ResenaCard from '../../components/ResenaCard'
-import { useNavigation } from '@react-navigation/native';
+import ButtonGuardar from '../../components/atoms/Button' 
 
-export default function Cuenta() {
-  const navigation = useNavigation();
-  const [isEditing, setIsEditing] = useState(false);
-  const toggleEditing = () => {
-    setIsEditing(!isEditing);
-  };
-  const iraEditar=()=>{
-    navigation.navigate("EditarInfo")
-  }
+export default function EditarInfo() {
   return (
-    
-    <SafeAreaView style={styles.main}>
+    <SafeAreaView style={styles.mainContainer}>
 
-      <View style={{alignSelf:"flex-end",marginRight:10}}>
-      <TouchableOpacity onPress={iraEditar} style={{flexDirection:"row",justifyContent:"center",alignContent:"center",alignItems:"center"}}>
-        <Text style={styles.textEditar}>Editar</Text>
-        <FontAwesome name="edit" size={24} color="black" />
-      </TouchableOpacity>
-      </View>
-
-      
-      
-        
       <View style={styles.viewCardCuenta}>
         <Image source={ProfileImg} style={styles.profileImg}/>
         <TouchableOpacity style={styles.buttonEditImg}>
@@ -38,26 +18,47 @@ export default function Cuenta() {
         <Text>Rol (Trabajador/Cliente)</Text>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollViewContent} showsVerticalScrollIndicator={false}>
-
+      <ScrollView>
       <Text style={styles.textInfo}>Información de Nombre</Text>
-      <Text style={styles.textInfoDescription}>Me dedico a trabajar la limpieza en general de las casas, puedo limpiar desde cuartos, cocinas, cocheras, baños, lavar trastes, barrer, trapear, todo lo que sea necesario para dejar tu casa limpia.</Text>
-      
+      <TextInput
+          style={styles.inputInfoCliente}
+          placeholder="Informacion del cliente"
+          secureTextEntry
+          multiline={true}
+      />
+
       <View style={styles.viewIconData}>
         <FontAwesome name="user-o" size={24} color="gray" />
-        <Text style={styles.textInfoDescription2}>Nombre Apellido1 Apellido2</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre completo"
+          secureTextEntry
+          multiline={true}
+      />
       </View>
      
 
       <View style={styles.viewIconData}>
         <FontAwesome name="envelope-o" size={24} color="gray" />
-        <Text style={styles.textInfoDescription2}>correoexample@example.com</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Correo electronico"
+          secureTextEntry
+          multiline={true}
+          keyboardType='email-address'
+      />
       </View>
      
 
       <View style={styles.viewIconData}>
         <FontAwesome name="phone" size={24} color="gray" />
-        <Text style={styles.textInfoDescription2}>123 456 7890</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Telefono"
+          secureTextEntry
+          multiline={true}
+          keyboardType='phone-pad'
+      />
       </View>
      
 
@@ -71,36 +72,21 @@ export default function Cuenta() {
         <Foundation name="male-symbol" size={34} color="gray" />
         <Text style={styles.textInfoDescription2}>sexo</Text>
       </View>
+      </ScrollView>
+
+      <ButtonGuardar txtBtn="Guardar"/>
       
 
-      <Text style={styles.textResenas}>Lo que dicen los anfitriones sobre mi</Text>
-
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <ResenaCard/>
-          <ResenaCard/>
-          <ResenaCard/>
-      </ScrollView>
-      
-      </ScrollView>
-      
     </SafeAreaView>
-    
   )
 }
 
 const styles = StyleSheet.create({
-  main:{
+  mainContainer:{
     flex:1
   },
-  scrollViewContent:{
-    flexGrow:1
-  },
-  textEditar:{
-    textAlign:'right',
-    color: '#6E6E6E',
-    fontSize: 16,
-  },
   viewCardCuenta:{
+    marginTop:15,
     alignSelf:'center',
     width:'90%',
     backgroundColor: '#fff', 
@@ -167,26 +153,28 @@ const styles = StyleSheet.create({
   },
   viewIconData:{
     flexDirection:'row',
-    margin:10,
+    margin:5,
     alignContent:'center',
     alignItems:'center',
   },
-  line:{
-    borderBottomWidth: 2,
-    borderColor: 'gray',
-    marginLeft:10,
-    marginRight:10
-  },
-  textResenas:{
-    fontSize:22,
-    fontWeight:'bold',
-    textAlign:"center"
-  },
-  textInputs:{
+  input: {
+    // Background con trasparencia
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     borderRadius: 10,
-    padding: 10, 
-    width:'90%',
-    marginLeft:10
-  }
+    padding: 10,
+    marginBottom: 10,
+    width: "90%",
+    marginLeft:5
+  },
+  inputInfoCliente: {
+    // Background con trasparencia
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
+    width: "97%",
+    height:"20%",
+    marginLeft:5,
+    marginRight:5
+  },
 })

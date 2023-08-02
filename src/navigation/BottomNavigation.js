@@ -11,6 +11,7 @@ import SolicitudesCliente from "../screens/cliente/Solicitudes";
 import PropiedadesCliente from "../screens/cliente/Propiedades";
 import NavigationTrabajador from "./NavigationTrabajador";
 import NavigationCliente from "./NavigationCliente";
+import NavigationCuentaCliente from "./NavigationCuentaCliente";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
     faHouse,
@@ -110,7 +111,7 @@ export default function BottomNavigation({ userRole }) {
                     />
                     <Tab.Screen
                         name="CuentaCliente"
-                        component={CuentaCliente}
+                        component={NavigationCuentaCliente}
                         options={{
                             tabBarLabel: "Cuenta",
                             tabBarIcon: ({ focused, color, size }) => (
