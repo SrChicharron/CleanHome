@@ -1,24 +1,30 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react'
 import { MaterialIcons } from '@expo/vector-icons'
+import EscobaClean from '../assets/icons/escobaClean.svg'
 
 export default function SinSolicitudes(props) {
-    const {mensajeTitulo, mensajeDescripcion}= props
+    const {mensajeTitulo, mensajeDescripcion, txtBtn, onPressBtn}= props
+
   return (
     <View style={styles.container}>
-        <MaterialIcons name="cleaning-services" size={54} color="#075493" />
+      <EscobaClean height={80}/>
       <Text style={styles.textTitle}>{mensajeTitulo}</Text>
       <Text style={styles.textDescription}>{mensajeDescripcion}</Text>
+      <TouchableOpacity style={styles.containerBtn} onPress={onPressBtn}>
+        <Text style={styles.txtBtn}>{txtBtn}</Text>
+      </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
     container:{
-        width:300,
-        height:180,
+        width: '100%',
+        height:250,
         backgroundColor:'#FFF',
-        margin:10,
+        paddingHorizontal:16,
+        paddingVertical:16,
         borderRadius: 10,
         elevation: 5, // Esto agregará la sombra en Android
         shadowColor: '#000', // Esto agregará la sombra en iOS
@@ -32,7 +38,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     textTitle:{
-        fontSize:24,
+        fontSize:18,
         fontWeight:'bold',
         textAlign:'center'
     },
@@ -40,5 +46,19 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:'gray',
         textAlign:'center'
-    }
+    },
+    containerBtn: {
+      backgroundColor: '#075493',
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+      borderRadius: 8,
+      marginTop: 16,
+      width: '100%',
+      alignItems: 'center',
+    },
+    txtBtn: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
 })
