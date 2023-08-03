@@ -80,7 +80,7 @@ export default function BottomNavigation({ userRole }) {
             ) : (
                 <>
                     <Tab.Screen
-                        name="HomeCliente"
+                        name="Trabajos publicados"
                         component={NavigationCliente}
                         options={{
                             tabBarLabel: "Inicio",
