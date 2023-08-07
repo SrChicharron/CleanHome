@@ -20,7 +20,9 @@ export default function SinSolicitudes(props) {
 
 const styles = StyleSheet.create({
     container:{
-        width: '100%',
+        width: '99%',
+        margin: 2,
+        marginBottom: 8,
         height:250,
         backgroundColor:'#FFF',
         paddingHorizontal:16,

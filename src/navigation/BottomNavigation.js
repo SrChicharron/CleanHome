@@ -49,7 +49,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="PostulacionesTrabajador"
+                        name="Postulaciones"
                         component={PostulacionesTrabajador}
                         options={{
                             tabBarLabel: "Postulaciones",
