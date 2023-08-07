@@ -1,18 +1,43 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import React, { useState } from "react";
 import ProfileImg from '../assets/images/ImgProfile.png'
 import VerificateIcon from '../assets/icons/VerificateIcon.svg'
+import * as ImagePicker from "expo-image-picker";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProfileCard( props ) {
-    const { nombre, apellido, foto, rol } = props;
+    const { formData, handleChange } = props; 
+    const [image, setImage] = useState(null);
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+            handleChange("urlImgProfile", result.assets[0].uri);
+        }
+      };
+
   return (
     <View style={styles.container}>
-        <View style={styles.containerImage}>
-            <Image source={ProfileImg} style={styles.profileImg}/>
+        <TouchableOpacity 
+            style={styles.containerImage} 
+            onPress={() => pickImage()}
+        >
+            <Image source={{uri: formData.urlImgProfile}} style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
-        </View>
-        <Text style={styles.txtName}>{nombre}Carlos Ricardo {apellido}Espinoza Pliego</Text>
-        <Text style={styles.txtRol}>{rol}Trabajador</Text>
+        </TouchableOpacity>
+        <Text style={styles.txtName}>{formData.nombre}Carlos Ricardo {formData.apellido}Espinoza Pliego</Text>
+        <Text style={styles.txtRol}>{formData.rol}Trabajador</Text>
     </View>
   )
 }
@@ -22,6 +47,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 10,
         padding: 16,
+        marginBottom: 16,
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
@@ -46,7 +72,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-
+        backgroundColor: '#F5F5F5',
+        borderRadius: 100,
+        width: 150,
+        height: 150,
     },
     iconVerif: {
         position: 'absolute',
