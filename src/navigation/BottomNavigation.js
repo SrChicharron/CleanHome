@@ -90,7 +90,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="PropiedadesCliente"
+                        name="Propiedades"
                         component={PropiedadesCliente}
                         options={{
                             tabBarLabel: "Propiedades",

@@ -59,3 +59,5 @@ buck-out/
 .expo/devices.json
 .expo/README.md
 .vscode/settings.json
+yarn.lock
+package-lock.json

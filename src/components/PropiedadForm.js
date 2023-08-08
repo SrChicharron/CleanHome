@@ -11,11 +11,13 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { fetchEstados, fetchTipos } from "../api/PropiedadesAPI";
 
 export default function PropiedadForm(props) {
   const { formData, handleChange } = props;
 
   const [listaTipoPropiedades, setListaTipoPropiedades] = useState([]);
+  const [ListaEstados, setListaEstados] = useState([]);
   const [image, setImage] = useState(null);
   const [imageComprobante, setImageComprobante] = useState(null);
 
@@ -41,15 +43,17 @@ export default function PropiedadForm(props) {
     }
   };
 
+  const loadData = async () => {
+    const resultEstados = await fetchEstados();
+    //console.log(resultEstados);
+    setListaEstados(resultEstados);
+    const resultTipos = await fetchTipos();
+    //console.log(resultTipos);
+    setListaTipoPropiedades(resultTipos);
+  };
   // Simulación de llamada a API para obtener los servicios
   useEffect(() => {
-    // Aquí puedes realizar una llamada real a una API para obtener los servicios disponibles
-    // En este ejemplo, utilizaremos datos estáticos
-    const mockTipoPropiedad = [
-      { id: 1, nombre: "Casa" },
-      { id: 2, nombre: "Comercial" },
-    ];
-    setListaTipoPropiedades(mockTipoPropiedad);
+    loadData();
   }, []);
 
   return (
@@ -70,14 +74,14 @@ export default function PropiedadForm(props) {
       <Text style={styles.label}>Tipo de propiedad</Text>
       <Picker
         style={styles.picker}
-        selectedValue={formData.tipoServicio}
-        onValueChange={(itemValue) => handleChange("tipoPropiedad", itemValue)}
+        selectedValue={formData.idTipoPropiedad}
+        onValueChange={(itemValue) => handleChange("idTipoPropiedad", itemValue)}
       >
-        <Picker.Item label="Seleccione un servicio" value="" />
+        <Picker.Item label="Seleccione un tipo de propiedad" value="" />
         {listaTipoPropiedades.map((TipoPropiedad) => (
           <Picker.Item
             key={TipoPropiedad.id}
-            label={TipoPropiedad.nombre}
+            label={TipoPropiedad.tipo}
             value={TipoPropiedad.id}
           />
         ))}
@@ -124,12 +128,20 @@ export default function PropiedadForm(props) {
       />
 
       <Text style={styles.label}>Estado</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Querétaro"
-        value={formData.estado}
-        onChangeText={(text) => handleChange("estado", text)}
-      />
+      <Picker
+        style={styles.picker}
+        selectedValue={formData.idEstado}
+        onValueChange={(itemValue) => handleChange("idEstado", itemValue)}
+      >
+        <Picker.Item label="Seleccione un Estado" value="" />
+        {ListaEstados.map((estado) => (
+          <Picker.Item
+            key={estado.id}
+            label={estado.estado}
+            value={estado.id}
+          />
+        ))}
+      </Picker>
 
       <Text style={styles.label}>Referencias adicionales</Text>
       <TextInput

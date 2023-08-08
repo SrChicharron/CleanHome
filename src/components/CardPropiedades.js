@@ -42,9 +42,9 @@ export default function CardPropiedades(props) {
               styles.containerIsApproved,
               {
                 backgroundColor:
-                formData.isApproved === "aprobado"
+                formData.estatus === "aprobado"
                     ? "#D4F4E2"
-                    : formData.isApproved === "rechazado"
+                    : formData.estatus === "rechazado"
                     ? "#EE7677"
                     : "#E6E6E6",
               },
@@ -54,11 +54,11 @@ export default function CardPropiedades(props) {
               styles.txtIsApproved,
               {
                 color:
-                formData.isApproved === "rechazado"
+                formData.estatus === "rechazado"
                     ? "#fff"
                     : "#000",
               },
-            ]}>{formData.isApproved}</Text>
+            ]}>{formData.estatus}</Text>
           </View>
         </View>
       </>
