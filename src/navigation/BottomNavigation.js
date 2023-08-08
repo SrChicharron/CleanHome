@@ -31,7 +31,7 @@ export default function BottomNavigation({ userRole }) {
                 }),
             }}
         >
-            {userRole === "trabajador" ? (
+            {userRole === "ROLE_EMPLEADO" ? (
                 <>
                     <Tab.Screen
                         name="HomeTrabajador"
