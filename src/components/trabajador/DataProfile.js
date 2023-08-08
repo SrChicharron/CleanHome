@@ -7,7 +7,7 @@ import CakeIcon from "../../assets/icons/CakeIcon.svg";
 import ResenaCard from "../ResenaCard";
 
 export default function DataProfile( props ) {
-    const { formData } = props;
+    const { formData, titleResenias } = props;
 
   return (
     <View>
@@ -29,7 +29,7 @@ export default function DataProfile( props ) {
         <CakeIcon style={styles.icons} />
         <Text style={styles.txtLabels}>{formData.celular}7772673669</Text>
       </View>
-      <Text style={styles.titleResenias}>Lo que dicen los anfitriones sobre mi</Text>
+      <Text style={styles.titleResenias}>{titleResenias}</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <ResenaCard/>
             <ResenaCard/>

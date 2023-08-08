@@ -40,8 +40,7 @@ export default function ReseniaForm( props ) {
       borderRadius: 5,
     },
     starRating: {
-      alignSelf: "center",
-      marginVertical: 16,
+      alignSelf: "flex-start",
     }
   });
   

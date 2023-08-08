@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import ModalEditPerfil from "../../components/trabajador/ModalEditPerfil";
@@ -73,7 +72,7 @@ export default function Cuenta() {
         handleChange={handleChange}
         />
 
-        <DataProfile formData={formData}/>
+        <DataProfile formData={formData} titleResenias={"Lo que dicen los anfitriones sobre mi"}/>
 
       <ModalEditPerfil 
         modalVisible={modalVisible}

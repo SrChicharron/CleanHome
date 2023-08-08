@@ -21,6 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function BottomNavigation({ userRole }) {
+    console.log("user role" + userRole)
     const Tab = createBottomTabNavigator();
     return (
         <Tab.Navigator
@@ -35,7 +36,7 @@ export default function BottomNavigation({ userRole }) {
             {userRole === "ROLE_EMPLEADO" ? (
                 <>
                     <Tab.Screen
-                        name="HomeTrabajador"
+                        name="Publicaciones"
                         component={NavigationTrabajador}
                         options={{
                             tabBarLabel: "Inicio",
@@ -100,7 +101,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="SolictudesCliente"
+                        name="Solictudes"
                         component={SolicitudesCliente}
                         options={{
                             tabBarLabel: "Solicitudes",
@@ -110,7 +111,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="CuentaCliente"
+                        name="Mi perfil"
                         component={NavigationCuentaCliente}
                         options={{
                             tabBarLabel: "Cuenta",

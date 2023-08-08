@@ -12,9 +12,6 @@ export default function Solicitudes() {
           <ScrollView nestedScrollEnabled={false}>
             <SolicitudesCard/>
             <SolicitudesCard/>
-            <SolicitudesCard/>
-            <SolicitudesCard/>
-            <SolicitudesCard/>
           </ScrollView>
           
         ) : (
@@ -30,9 +27,8 @@ export default function Solicitudes() {
 
 const styles= StyleSheet.create({
   container:{
-    flex:1,
-    justifyContent:'center',
-    alignContent:'center',
-    alignItems:'center'
+    paddingHorizontal: 8,
+    backgroundColor: '#fff',
+    flex: 1,
   }
 })
