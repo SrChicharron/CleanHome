@@ -28,6 +28,22 @@ export default function EditProfileForm(props) {
                 value={formData.correo}
                 onChangeText={(text) => handleChange("correo", text)}
             />
+            <Text style={styles.label}>Número de celular</Text>
+            <TextInput
+                style={styles.input}
+                value={formData.celular}
+                keyboardType="numeric"
+                maxLength={10}
+                onChangeText={(text) => handleChange("celular", text)}
+            />
+            <Text style={styles.label}>Descripción</Text>
+            <TextInput
+                style={{ ...styles.input, ...styles.labelDescripcion }}
+                placeholder="Descripción"
+                multiline
+                value={formData.descripcion}
+                onChangeText={(text) => handleChange("descripcion", text)}
+            />
         </View>
     )
 }

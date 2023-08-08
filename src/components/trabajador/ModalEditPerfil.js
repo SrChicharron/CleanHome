@@ -8,6 +8,7 @@ import EditProfileForm from "./EditProfileForm";
 
 export default function ModalEditPerfil(props) {
     const { modalVisible, closeModal, formData, handleChange } = props;
+    
     return (
         <Modal
             visible={modalVisible}

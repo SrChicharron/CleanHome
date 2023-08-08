@@ -3,50 +3,61 @@ import React,{useState} from 'react'
 import ProfileImg from '../assets/images/welcome1.jpg'
 import { AntDesign } from '@expo/vector-icons'
 import AccionesSolicitudes from './AccionesSolicitudes'
+import StarRating from "react-native-star-rating-widget";
 
 export default function SolicitudesCard() {
 
     const [isModalVisible, setModalVisible] = useState(false);
+    // Variables de prueba para que funcione el componente de status y estrellas -----
+    const [estatus, setEstatus] = useState('finalizado');
+    const [calificacion, setCalificacion] = useState(4.5);
+    // ----- fin de variables de prueba -----//
   
     const toggleModal = () => {
       setModalVisible(!isModalVisible);
     };
 
-    const statusColor = (status)=> {
-        if(status=='pendiente'){
-            return '#E6E6E6'
-        } else if(status=='aprobado'){
-            return '#CEFDDE'
-        } else if(status=='rechazado'){
-            return '#E73C3C'
-        } else if(status=='finalizado'){
-            return '#075493'
-        }
-    };
-
   return (
     <View>
-    <TouchableWithoutFeedback onPress={toggleModal}>
+    <TouchableWithoutFeedback onLongPress={toggleModal}>
     
     <View style={styles.containerCard}>
       <View style={styles.dividedView}>
 
-        <View style={{width:'40%',alignItems:'center',justifyContent:'center'}}>
+        <View style={styles.containerImg}>
             <Image source={ProfileImg} style={styles.profileiImg}/>
             {/* <Text style={[styles.textStatus,{backgroundColor:statusColor(status)}]}>Pendiente</Text> */}
-            <Text style={styles.textStatus}>Pendiente</Text>
+            <View
+            style={[
+              styles.containerIsApproved,
+              {
+                backgroundColor:
+                estatus === "aprobado"
+                    ? "#D4F4E2"
+                    : estatus === "finalizado"
+                    ? "#075493"
+                    : "#E6E6E6",
+              },
+            ]}
+          >
+            <Text style={[
+              styles.txtIsApproved,
+              {
+                color:
+                estatus === "finalizado"
+                    ? "#fff"
+                    : "#000",
+              },
+            ]}>{estatus}</Text>
+          </View>
         </View>
 
-        <View style={{width:'60%',}}>
+        <View style={styles.containerInfo}>
             <Text style={styles.textNombre}>Nombre Trabajador</Text>
             <Text style={styles.textRol}>Rol</Text>
 
             <View style={styles.viewStars}>
-                <AntDesign name="staro" size={35} color="#FFC300" />
-                <AntDesign name="staro" size={35} color="#FFC300" />
-                <AntDesign name="staro" size={35} color="#FFC300" />
-                <AntDesign name="staro" size={35} color="#FFC300" />
-                <AntDesign name="staro" size={35} color="#FFC300" />
+                <StarRating rating={calificacion} /*onChange={(rating) => handleChange("calificacion", rating)}*/ starSize={30} style={styles.starRating}/>
             </View>
 
             <Text style={styles.textDescripcion}>Moises se postuló para casa centro ubicado en Mariano escobedo #68 Col. Centro 68001, Qro Qro.</Text>
@@ -63,10 +74,10 @@ export default function SolicitudesCard() {
 
 const styles = StyleSheet.create({
     containerCard:{
-        width:340,
         height:200,
         backgroundColor:'#FFF',
-        margin:10,
+        margin: 8,
+        padding: 16,
         borderRadius: 10,
         elevation: 5, // Esto agregará la sombra en Android
         shadowColor: '#000', // Esto agregará la sombra en iOS
@@ -81,38 +92,52 @@ const styles = StyleSheet.create({
     },
     dividedView:{
         flexDirection:'row',
-        width:'100%',
-        height:'100%'
+    },
+    containerImg: {
+        width:'40%',
+        alignItems:'center',
+        justifyContent:'center',
+        marginRight: 16,
     },
     profileiImg:{
-        width:120,
-        height:120,
-        borderRadius:100
+        width:140,
+        height:140,
+        borderRadius: 100
     },
-    textStatus:{
-        fontSize:14,
-        width:'80%',
-        textAlign:'center',
-        borderRadius:10,
-        marginTop:10
+    containerInfo: {
+        width: '55%',
     },
     textNombre:{
-        fontSize:20,
+        fontSize:18,
         fontWeight:'bold',
     },
     textRol:{
-        fontSize:18,
+        fontSize:14,
         textAlign:'left'
     },
     viewStars:{
-        width:'100%',
-        flexDirection:'row',
-        justifyContent:'space-between',
-        marginTop:5
+        paddingVertical: 4,
       },
     textDescripcion:{
         fontSize:14,
         textAlign:'justify',
-        marginRight:5
-    }
+        color: '#707070',
+    },
+    containerIsApproved: {
+        backgroundColor: "#E6E6E6",
+        borderRadius: 50,
+        width: 100,
+        paddingVertical: 4,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 8,
+      },
+      txtIsApproved: {
+        textAlign: "center",
+        fontSize: 12,
+    
+      },
+      starRating: {
+        alignSelf: "flex-start",
+      }
 })
