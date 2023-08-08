@@ -6,6 +6,8 @@ import Button from '../components/atoms/Button';
 import { useNavigation } from '@react-navigation/native';
 
 export default function LoginForm( props ) {
+    
+
     const navigation = useNavigation();
     const { email, setEmail, password, setPassword, handleLogin } = props;
   return (

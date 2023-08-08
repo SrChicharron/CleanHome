@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { BlurView } from 'expo-blur';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,23 +7,20 @@ import LoginForm from '../../components/LoginForm';
 import ImgLogin from '../../assets/images/login.jpg';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useNavigation } from '@react-navigation/native';
+import useAuth from '../../hooks/UseAuth';
 
 export default function Login() {
+  const {auth, login} = useAuth()
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [userRole, setUserRole] = useState('cliente');
 
   const handleLogin = () => {
-    // Lógica para realizar la autenticación
-    console.log('Iniciar sesión:', email, password);
-    if (userRole === 'cliente') {
-      navigation.navigate('NavigationCliente');
-    } else if (userRole === 'trabajador') {
-      navigation.navigate('NavigationTrabajador');
-    } else {
-      // Manejo para cuando el rol no es válido o la autenticación falla.
+    const loginData={
+    username:email,
+    password:password
     }
+    login(loginData);
   };
 
   return (
@@ -67,6 +64,7 @@ const styles = StyleSheet.create({
     height: '115%',
     resizeMode: 'cover',
     marginTop: -50,
+    
 },
   logo: {
     width: 100,

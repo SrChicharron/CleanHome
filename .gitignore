@@ -56,3 +56,8 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
+*-lock.json
+yarn.lock
+.expo/README.md
+.vscode/settings.json
+.expo/devices.json
