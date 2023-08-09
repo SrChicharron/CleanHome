@@ -21,6 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function BottomNavigation({ userRole }) {
+    console.log("user role" + userRole)
     const Tab = createBottomTabNavigator();
     return (
         <Tab.Navigator
@@ -32,10 +33,10 @@ export default function BottomNavigation({ userRole }) {
                 }),
             }}
         >
-            {userRole === "trabajador" ? (
+            {userRole === "ROLE_EMPLEADO" ? (
                 <>
                     <Tab.Screen
-                        name="HomeTrabajador"
+                        name="Publicaciones"
                         component={NavigationTrabajador}
                         options={{
                             tabBarLabel: "Inicio",
@@ -49,7 +50,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="PostulacionesTrabajador"
+                        name="Postulaciones"
                         component={PostulacionesTrabajador}
                         options={{
                             tabBarLabel: "Postulaciones",
@@ -63,7 +64,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="CuentaTrabajador"
+                        name="Mi perfil"
                         component={CuentaTrabajador}
                         options={{
                             tabBarLabel: "Cuenta",
@@ -90,7 +91,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="PropiedadesCliente"
+                        name="Propiedades"
                         component={PropiedadesCliente}
                         options={{
                             tabBarLabel: "Propiedades",
@@ -100,7 +101,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="SolictudesCliente"
+                        name="Solictudes"
                         component={SolicitudesCliente}
                         options={{
                             tabBarLabel: "Solicitudes",
@@ -110,7 +111,7 @@ export default function BottomNavigation({ userRole }) {
                         }}
                     />
                     <Tab.Screen
-                        name="CuentaCliente"
+                        name="Mi perfil"
                         component={NavigationCuentaCliente}
                         options={{
                             tabBarLabel: "Cuenta",
