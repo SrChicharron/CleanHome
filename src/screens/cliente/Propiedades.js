@@ -6,32 +6,39 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SinSolicitudes from "../../components/SinSolicitudes";
+import ListPropiedades from "../../components/propiedad/ListPropiedades";
 import CardPropiedades from "../../components/CardPropiedades";
 import ModalAddPropiedad from "../../components/ModalAddPropiedad";
 import AccionesModal from "../../components/AccionesModal";
+import { fetchPropiedades } from "../../api/propiedad/PropiedadesAPI";
 
 export default function Propiedades() {
   const [activeOption, setActiveOption] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPropiedad, setTitleModalPropiedad] = useState("");
+  const [propiedades, setPropiedades] = useState([]);
+  const [propiedadEdicion, setPropiedadEdicion]=useState({});
   const [formData, setFormData] = useState({
-    imagen: "",
-    idTipoPropiedad:"",
-    tipoPropiedad: "",
-    tituloCasa: "",
+    id:"",
+    titulo: "",
     calle: "",
-    numero: "",
+    numeroExt: "",
     codigoPostal: "",
     colonia: "",
-    idEstado:"",
-    estado: "",
     referencias: "",
-    comprobanteDomicilio: "",
-    estatus: "aprobado",
+    estatus: "pendiente",
+    estado:{
+      id:"",
+      estado:""},
+    tipoPropiedad:{
+      id:"",
+      tipo:""
+      },
+    idUsuario:""
   });
 
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
@@ -45,20 +52,23 @@ export default function Propiedades() {
 
   const formatFormData = () => {
     setFormData({
-      imagen: "",
-      idTipoPropiedad:"",
-      tipoPropiedad: "",
-      tituloCasa: "",
+      id:"",
+      titulo: "",
       calle: "",
-      numero: "",
+      numeroExt: "",
       codigoPostal: "",
       colonia: "",
-      idEstado:"",
-      estado: "",
       referencias: "",
-      comprobanteDomicilio: "",
-      estatus: "",
-    });
+      estatus: "pendiente",
+      estado:{
+        id:"",
+        estado:""},
+      tipoPropiedad:{
+        id:"",
+        tipo:""
+        },
+      idUsuario:""
+      });
   };
 
   const openModal = (titleModal) => {
@@ -78,6 +88,24 @@ export default function Propiedades() {
   const openModalOptions = () => {
     console.log("openModalOptions");
     setModalOptionVisible(true);
+    setFormData({
+      id:propiedadEdicion.id,
+      titulo: propiedadEdicion.titulo,
+      calle: propiedadEdicion.calle,
+      numeroExt: propiedadEdicion.numeroExt,
+      codigoPostal: propiedadEdicion.codigoPostal,
+      colonia: propiedadEdicion.colonia,
+      referencias: propiedadEdicion.referencias,
+      estatus: "pendiente",
+      estado:{
+        id:propiedadEdicion.estado.id,
+        estado:propiedadEdicion.estado.estado},
+      tipoPropiedad:{
+        id:propiedadEdicion.tipoPropiedad.id,
+        tipo:propiedadEdicion.tipoPropiedad.tipo
+        },
+      idUsuario:propiedadEdicion.idUsuario
+      });
   };
 
   const closeModalOptions = () => {
@@ -95,6 +123,15 @@ export default function Propiedades() {
     setModalOptionVisible(false);
     openModal("Agregar propiedad");
   };
+  const loadData = async () => {
+    const resultPropiedades = await fetchPropiedades();
+    console.log(resultPropiedades);
+    setPropiedades(resultPropiedades);
+  };
+  // Simulación de llamada a API para obtener los servicios
+  useEffect(() => {
+    loadData();
+  }, []);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -114,20 +151,15 @@ export default function Propiedades() {
           <Text style={styles.txtAdd}>Agregar</Text>
         </TouchableOpacity>
       </View>
-
-      <CardPropiedades
+      <ListPropiedades 
+        propiedades={propiedades}
+        propiedadEdicion={propiedadEdicion}
+        setPropiedadEdicion={setPropiedadEdicion}
         formData={formData}
-        onLongPress={openModalOptions}
+        openModalOptions={openModalOptions}
         setModalOptionVisible={setModalOptionVisible}
         closeModalOptions={closeModalOptions}
       />
-      <CardPropiedades
-        formData={formData}
-        onLongPress={openModalOptions}
-        setModalOptionVisible={setModalOptionVisible}
-        closeModalOptions={closeModalOptions}
-      />
-
       <ModalAddPropiedad
         modalVisible={modalVisible}
         closeModal={closeModal}
