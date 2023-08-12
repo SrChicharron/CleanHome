@@ -13,15 +13,20 @@ import ListPropiedades from "../../components/propiedad/ListPropiedades";
 import CardPropiedades from "../../components/CardPropiedades";
 import ModalAddPropiedad from "../../components/ModalAddPropiedad";
 import AccionesModal from "../../components/AccionesModal";
-import { fetchPropiedades } from "../../api/propiedad/PropiedadesAPI";
+import { fetchPropiedades, registrarPropiedad, deletePropiedad } from "../../api/propiedad/PropiedadesAPI";
+import useAuth from "../../hooks/UseAuth";
 
 export default function Propiedades() {
+  //useauth par obtener el id del cliente
+  const {auth} = useAuth()
+  //usestate para guardar informacion
   const [activeOption, setActiveOption] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPropiedad, setTitleModalPropiedad] = useState("");
   const [propiedades, setPropiedades] = useState([]);
   const [propiedadEdicion, setPropiedadEdicion]=useState({});
+  //form para gardar la info y enviarla al back
   const [formData, setFormData] = useState({
     id:"",
     titulo: "",
@@ -38,17 +43,45 @@ export default function Propiedades() {
       id:"",
       tipo:""
       },
-    idUsuario:""
+    idUsuario:auth.idUsuario
   });
+  const [comprobantes, setComprobantes] = useState([]);
+  const [imagenes, setImagenes] = useState([]);
 
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    console.log(formData);
+    if (name === "estado") {
+      setFormData(prevState => ({
+        ...prevState,
+        estado: {
+          ...prevState.estado,
+          id: value
+        }
+      }));
+    }else if(name === "tipoPropiedad"){
+      setFormData(prevState => ({
+        ...prevState,
+        tipoPropiedad: {
+          ...prevState.tipoPropiedad,
+          id: value
+        }
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
+    //console.log(formData);
   };
+
+  const handleImagenes = (nvaImagen) =>{
+    setImagenes(prevImagenes => [...prevImagenes, nvaImagen]);
+  }
+
+  const handleComprobantes = (nvoComprobante) =>{
+    setComprobantes(prevComprobantes => [...prevComprobantes, nvoComprobante]);
+  }
 
   const formatFormData = () => {
     setFormData({
@@ -67,8 +100,10 @@ export default function Propiedades() {
         id:"",
         tipo:""
         },
-      idUsuario:""
+      idUsuario:auth.idUsuario
       });
+      setImagenes([]);
+      setComprobantes([]);
   };
 
   const openModal = (titleModal) => {
@@ -84,7 +119,7 @@ export default function Propiedades() {
   const handleOptionClick = (option) => {
     setActiveOption(option);
   };
-
+//cuando se abre el modal se envia la data de la propiedad al form
   const openModalOptions = () => {
     console.log("openModalOptions");
     setModalOptionVisible(true);
@@ -123,19 +158,37 @@ export default function Propiedades() {
     setModalOptionVisible(false);
     openModal("Agregar propiedad");
   };
+  //consulta las propiedades
   const loadData = async () => {
-    const resultPropiedades = await fetchPropiedades();
-    console.log(resultPropiedades);
+    const idCliente=auth.idUsuario;
+    const resultPropiedades = await fetchPropiedades(idCliente);
     setPropiedades(resultPropiedades);
   };
+  //para registrar
+  const handleRegister =() =>{
+    console.log(formData);
+    console.log(imagenes);
+    console.log(comprobantes);
+    const regProp=registrarPropiedad(formData,imagenes,comprobantes);
+    formatFormData();
+    closeModal();
+    //const subFot=subirFotosPropiedad(imagenes,comprobantes,9)
+  }
+  //para eliminar
+  const handleDelete =() =>{
+    console.log(formData);
+    const deleteProp=deletePropiedad(formData)
+    formatFormData();
+    closeModal();
+    //const subFot=subirFotosPropiedad(imagenes,comprobantes,9)
+  }
   // Simulación de llamada a API para obtener los servicios
   useEffect(() => {
     loadData();
-  }, []);
-
+  }, [formData]);
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {activeOption === false && (
+      {propiedades.length === 0 && (
         <SinSolicitudes
           mensajeTitulo="No tienes propiedades publicadas"
           mensajeDescripcion="Publica una propiedad para poder publicar un trabajo"
@@ -163,8 +216,11 @@ export default function Propiedades() {
       <ModalAddPropiedad
         modalVisible={modalVisible}
         closeModal={closeModal}
+        handleRegister={handleRegister}
         formData={formData}
         handleChange={handleChange}
+        handleImagenes={handleImagenes}
+        handleComprobantes={handleComprobantes}
         formatFormData={formatFormData}
         titleModal={titleModalPropiedad}
       />
@@ -176,7 +232,7 @@ export default function Propiedades() {
                 txtBtnBlue="Editar"
                 txtBtnRed="Eliminar"
                 onPressBlue={openModalPropiedad}
-                onPressRed={() => console.log("Eliminar")}
+                onPressRed={handleDelete}
       />
     </ScrollView>
   );

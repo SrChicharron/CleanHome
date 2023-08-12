@@ -14,7 +14,7 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { fetchEstados, fetchTipos } from "../api/propiedad/PropiedadesAPI";
 
 export default function PropiedadForm(props) {
-  const { formData, handleChange } = props;
+  const { formData, handleChange, handleImagenes, handleComprobantes } = props;
 
   const [listaTipoPropiedades, setListaTipoPropiedades] = useState([]);
   const [ListaEstados, setListaEstados] = useState([]);
@@ -33,10 +33,12 @@ export default function PropiedadForm(props) {
     if (!result.canceled) {
       if (option === 1) {
         setImage(result.assets[0].uri);
-        handleChange("imagen", result.assets[0].uri);
+        //handleChange("imagen", result.assets[0].uri);
+        handleImagenes(result.assets[0].uri);
       } else if (option === 2) {
         setImageComprobante(result.assets[0].uri);
-        handleChange("comprobanteDomicilio", result.assets[0].uri);
+        //handleChange("comprobanteDomicilio", result.assets[0].uri);
+        handleComprobantes(result.assets[0].uri);
       }
     }
   };
@@ -73,7 +75,7 @@ export default function PropiedadForm(props) {
       <Picker
         style={styles.picker}
         selectedValue={formData.tipoPropiedad.id}
-        onValueChange={(itemValue) => handleChange("idTipoPropiedad", itemValue)}
+        onValueChange={(itemValue) => handleChange("tipoPropiedad", itemValue)}
       >
         <Picker.Item label="Seleccione un tipo de propiedad" value="" />
         {listaTipoPropiedades.map((TipoPropiedad) => (
@@ -90,7 +92,7 @@ export default function PropiedadForm(props) {
         style={styles.input}
         placeholder="Casa de las lomas"
         value={formData.titulo}
-        onChangeText={(text) => handleChange("tituloCasa", text)}
+        onChangeText={(text) => handleChange("titulo", text)}
       />
 
       <Text style={styles.label}>Calle / avenida</Text>
@@ -106,7 +108,7 @@ export default function PropiedadForm(props) {
         style={styles.input}
         placeholder="1611-3"
         value={formData.numeroExt}
-        onChangeText={(text) => handleChange("numero", text)}
+        onChangeText={(text) => handleChange("numeroExt", text)}
       />
 
       <Text style={styles.label}>Código postal</Text>
@@ -129,7 +131,7 @@ export default function PropiedadForm(props) {
       <Picker
         style={styles.picker}
         selectedValue={formData.estado.id}
-        onValueChange={(itemValue) => handleChange("idEstado", itemValue)}
+        onValueChange={(itemValue) => handleChange("estado", itemValue)}
       >
         <Picker.Item label="Seleccione un Estado" value="" />
         {ListaEstados.map((estado) => (
