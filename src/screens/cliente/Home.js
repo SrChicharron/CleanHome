@@ -1,16 +1,41 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import PublicacionesActivas from './home-publicaciones/PublicacionesActivas';
 import PublicacionesAceptadas from './home-publicaciones/PublicacionesAceptadas';
 import PublicacionesFinalizadas from './home-publicaciones/PublicacionesFinalizadas';
 
-export default function Home() {
-  const [activeOption, setActiveOption] = useState('activos');
+import { getPublicaciones } from '../../api/cliente/PublicacionesApi';
 
-  const handleOptionClick = (option) => {
-    setActiveOption(option);
-  };
+export default function Home() {
+  const [activeOption, setActiveOption] = useState('activo');
+  const [publicaciones, setPublicaciones] = useState([]);
+  const [publicacionesFiltradas, setPublicacionesFiltradas] = useState([]);
+
+  useEffect(() => {
+    loadPublicaciones();
+  }, []);
+
+  useEffect(() => {
+    filtrarPublicaciones(activeOption);
+  }, [publicaciones, activeOption]); // Agregamos "publicaciones" como dependencia
+
+  const loadPublicaciones = async () => {
+    const responseData = await getPublicaciones();
+    console.log("responseData = " + responseData);
+    setPublicaciones(responseData);
+    
+  }
+  
+  const filtrarPublicaciones = (filtro) => {
+    const publicacionesFiltradas = publicaciones.filter(publicacion => publicacion.estatus === filtro);
+    setPublicacionesFiltradas(publicacionesFiltradas);
+    console.log("Publicaciones filtradas => " + publicacionesFiltradas)
+  }
+
+  const handleFilterClick = (filtro) => {
+    setActiveOption(filtro);
+    filtrarPublicaciones(filtro);
+  }
 
   return (
     <View style={styles.container}>
@@ -18,18 +43,18 @@ export default function Home() {
       <TouchableOpacity
           style={[
             styles.containerTextFilter,
-            activeOption === 'activos' && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
+            activeOption === 'activo' && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
           ]}
-          onPress={() => handleOptionClick('activos')}
+          onPress={() => handleFilterClick('activo')}
         >
-          <Text style={[styles.textFilter, activeOption === 'activos' && styles.activeOptionTxtBtnFilter]}>Activos</Text>
+          <Text style={[styles.textFilter, activeOption === 'activo' && styles.activeOptionTxtBtnFilter]}>Activos</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             styles.containerTextFilter,
             activeOption === 'aceptados' && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
           ]}
-          onPress={() => handleOptionClick('aceptados')}
+          onPress={() => handleFilterClick('aceptados')}
         >
           <Text style={[styles.textFilter, activeOption === 'aceptados' && styles.activeOptionTxtBtnFilter]}>Aceptados</Text>
         </TouchableOpacity>
@@ -38,14 +63,15 @@ export default function Home() {
             styles.containerTextFilter,
             activeOption === 'finalizados' && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
           ]}
-          onPress={() => handleOptionClick('finalizados')}
+          onPress={() => handleFilterClick('finalizados')}
         >
           <Text style={[styles.textFilter, activeOption === 'finalizados' && styles.activeOptionTxtBtnFilter]}>Finalizados</Text>
         </TouchableOpacity>
       </View>
-      {activeOption === 'activos' && <PublicacionesActivas />}
-      {activeOption === 'aceptados' && <PublicacionesAceptadas />}
-      {activeOption === 'finalizados' && <PublicacionesFinalizadas/>}
+
+      {activeOption === 'activo' && <PublicacionesActivas publicaciones={ publicacionesFiltradas }/>}
+      {activeOption === 'aceptados' && <PublicacionesAceptadas publicaciones={ publicacionesFiltradas }/>}
+      {activeOption === 'finalizados' && <PublicacionesFinalizadas publicaciones={ publicacionesFiltradas } setActiveOption={setActiveOption}/>}
 
     </View>
   )

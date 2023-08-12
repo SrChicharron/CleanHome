@@ -9,31 +9,32 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import SinSolicitudes from "../../../components/SinSolicitudes";
-import CardPublicaciones from "../../../components/CardPublicaciones";
 import ModalResenia from "../../../components/ModalResenia";
+import PublicacionesList from "../../../components/cliente/PublicacionesList";
 
-export default function PublicacionesAceptadas() {
+export default function PublicacionesAceptadas( { publicaciones } ) {
   const navigation = useNavigation();
   const [activeOption, setActiveOption] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
-  const [formData, setFormData] = useState({
+  const [reseniaData, setReseniaData] = useState({
     calificacion: 0,
     resenia: "",
   });
 
-  // Función para actualizar el estado formData cuando cambie algún campo del formulario
+  console.log("Desde publicaciones Aceptadas ---> ")
+  // Función para actualizar el estado publicacion cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
+    setReseniaData({
+      ...reseniaData,
       [name]: value,
     });
-    console.log(formData)
+    console.log(reseniaData)
   };
 
-  // Agregar función para formatear el objeto formData 
-  const formatFormData = () => {
-    setFormData({
-      calificacion: "",
+  // Agregar función para formatear el objeto publicacion 
+  const formatReseniaData = () => {
+    setReseniaData({
+      calificacion: 0,
       resenia: "",
     });
   }
@@ -44,12 +45,12 @@ export default function PublicacionesAceptadas() {
 
   const closeModal = () => {
     setModalVisible(false);
-    formatFormData();
+    formatReseniaData();
   }
 
   return (
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {activeOption === false && (
+      <View style={styles.container}>
+      {!publicaciones || publicaciones.length === 0 && (
         <SinSolicitudes 
           mensajeTitulo='No haz aceptado ninguna solicitud'
           mensajeDescripcion='Acepta a un trabajador para limpiar tu hogar'
@@ -57,14 +58,22 @@ export default function PublicacionesAceptadas() {
           onPressBtn={() => navigation.navigate("SolictudesCliente")}
         />
       )}
-      <CardPublicaciones onLongPress={openModal}/>
+
+        <PublicacionesList 
+          publicaciones={publicaciones} 
+          onLongPress={openModal}
+          setModalOptionVisible={setModalVisible}
+          closeModalOptions={closeModal}
+        />
+
+
       <ModalResenia
         modalVisible={modalVisible}
         closeModal={closeModal}
-        formData={formData}
+        publicaciones={publicaciones}
         handleChange={handleChange}
       />
-    </ScrollView>
+    </View>
   )
 }
 
@@ -87,3 +96,4 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 });
+

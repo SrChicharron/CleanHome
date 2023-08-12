@@ -6,7 +6,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ReseniaForm from "./ReseniaForm";
 
 export default function ModalResenia( props ) {
-    const { modalVisible, closeModal, formData, handleChange, titleModal } = props;
+    const { modalVisible, closeModal, publicaciones, handleChange, titleModal } = props;
     return (
         <Modal
         visible={modalVisible}
@@ -28,7 +28,7 @@ export default function ModalResenia( props ) {
                 </TouchableOpacity>
                 <KeyboardAwareScrollView style={ styles.bodyModal }>
                     {/* Formulario para crear una nueva publicación */}
-                    <ReseniaForm formData={formData} handleChange={handleChange}/>
+                    <ReseniaForm formData={publicaciones} handleChange={handleChange}/>
                 </KeyboardAwareScrollView>
                 <View style={ styles.footerModal }>
                     {/* Botones para publicar y cancelar */}

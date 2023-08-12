@@ -6,7 +6,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import PublicacionForm from "./PublicacionForm";
 
 export default function ModalAddPublicacion( props ) {
-    const { modalVisible, closeModal, formData, handleChange, titleModal } = props;
+    const { modalVisible, closeModal, publicacion, handleChange, titleModal } = props;
 
     return (
         <Modal
@@ -30,7 +30,7 @@ export default function ModalAddPublicacion( props ) {
                 <KeyboardAwareScrollView style={ styles.bodyModal }>
                     {/* Formulario para crear una nueva publicación */}
                     <PublicacionForm 
-                        formData={formData}
+                        publicacion={publicacion}
                         handleChange={handleChange}
                     />
                 </KeyboardAwareScrollView>

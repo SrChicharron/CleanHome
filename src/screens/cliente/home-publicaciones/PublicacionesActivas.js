@@ -2,44 +2,48 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import SinSolicitudes from "../../../components/SinSolicitudes";
-import CardPublicaciones from "../../../components/CardPublicaciones";
 import ModalPublicacion from "../../../components/ModalAddPublicacion";
 import AccionesModal from "../../../components/AccionesModal";
+import PublicacionesList from "../../../components/cliente/PublicacionesList";
 
-export default function PublicacionesActivas() {
-  const [activeOption, setActiveOption] = useState(false);
+export default function PublicacionesActivas({ publicaciones }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPublicacion, setTitleModalPublicacion] = useState("");
-  const [formData, setFormData] = useState({
-    tipoServicio: "",
-    propiedad: "",
-    pagoOfrecido: "",
-    descripcion: "",
+  const [publicacionData, setPublicacionData] = useState({
+    "descripcion": "",
+    "estadoPublicacion": "",
+    "fecha": "",
+    "pagoOfrecido": '',
+    "idTipoServicio": '',
+    "idUsuario": '',
+    "idPropiedad": ''
   });
 
-  // Función para actualizar el estado formData cuando cambie algún campo del formulario
+  console.log("Desde publicaciones activa ---> ")
+  // Función para actualizar el estado publicacion cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
+    setPublicacionData({
+      ...publicacionData,
       [name]: value,
     });
-    console.log(formData)
+    console.log(publicacionData)
   };
 
-  // Agregar función para formatear el objeto formData 
-  const formatFormData = () => {
-    setFormData({
-      tipoServicio: "",
-      propiedad: "",
-      pagoOfrecido: "",
-      descripcion: "",
+  // Agregar función para formatear el objeto publicacion 
+  const formatpublicacionData = () => {
+    setPublicacionData({
+      "descripcion": "",
+      "estadoPublicacion": "",
+      "fecha": "",
+      "pagoOfrecido": '',
+      "idTipoServicio": '',
+      "idUsuario": '',
+      "idPropiedad": ''
     });
   }
 
@@ -50,7 +54,7 @@ export default function PublicacionesActivas() {
 
   const closeModal = () => {
     setModalVisible(false);
-    formatFormData();
+    formatpublicacionData();
   };
 
   const openModalOptions = () => {
@@ -64,6 +68,7 @@ export default function PublicacionesActivas() {
   const openModalPublicacion = () => {
     console.log("openModalPublicacion")
     setModalOptionVisible(false);
+    setPublicacionData(publicacionData);
     openModal("Editar publicación");
   }
   const openModalPublicacionAdd = () => {
@@ -72,16 +77,9 @@ export default function PublicacionesActivas() {
     openModal("Agregar publicación");
   }
 
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {activeOption === false && (
-        <SinSolicitudes
-          mensajeTitulo="No tienes publicaciones activas"
-          mensajeDescripcion="Publica un trabajo y elije al mejor trabajador para tí"
-          txtBtn="Publicar"
-          onPressBtn={() => console.log("Publicar")}
-        />
-      )}
+    <View style={styles.container}>
       <View style={styles.containerLinkAdd}>
         <TouchableOpacity
           style={styles.containerBtnLinkAdd}
@@ -90,21 +88,29 @@ export default function PublicacionesActivas() {
           <Text style={styles.txtAdd}>Agregar</Text>
         </TouchableOpacity>
       </View>
-      <CardPublicaciones 
-        onLongPress={ openModalOptions } 
-        setModalOptionVisible={setModalOptionVisible} 
-        closeModalOptions={closeModalOptions}
-        
-      />
-      <CardPublicaciones />
-      <CardPublicaciones />
 
-      <ModalPublicacion 
-        modalVisible={modalVisible} 
-        closeModal={closeModal} 
-        formData={formData}
+      {!publicaciones || publicaciones.length === 0 && (
+        <SinSolicitudes
+          mensajeTitulo="No tienes publicaciones activas"
+          mensajeDescripcion="Publica un trabajo y elije al mejor trabajador para tí"
+          txtBtn="Publicar"
+          onPressBtn={openModalPublicacionAdd}
+        />
+      )}
+
+      <PublicacionesList
+        publicaciones={publicaciones}
+        onLongPress={openModalOptions}
+        setModalOptionVisible={setModalOptionVisible}
+        closeModalOptions={closeModalOptions}
+      />
+
+      <ModalPublicacion
+        modalVisible={modalVisible}
+        closeModal={closeModal}
+        publicacion={publicacionData}
         handleChange={handleChange}
-        formatFormData={formatFormData}
+        formatpublicacion={formatpublicacionData}
         titleModal={titleModalPublicacion}
       />
 
@@ -117,7 +123,7 @@ export default function PublicacionesActivas() {
         onPressBlue={openModalPublicacion}
         onPressRed={() => console.log("Eliminar")}
       />
-    </ScrollView>
+    </View>
   );
 }
 

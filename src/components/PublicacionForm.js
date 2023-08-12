@@ -4,7 +4,7 @@ import { Picker } from "@react-native-picker/picker";
 
 
 export default function PublicacionForm( props ) {
-    const { formData, handleChange } = props;
+    const { publicacion, handleChange } = props;
   
     const [listaServicios, setListaServicios] = useState([]);
     const [listaPropiedades, setListaPropiedades] = useState([]);
@@ -35,8 +35,8 @@ export default function PublicacionForm( props ) {
         <Text style={styles.label}>Tipo de servicio</Text>
         <Picker
             style={styles.picker}
-          selectedValue={formData.tipoServicio}
-          onValueChange={(itemValue) => handleChange("tipoServicio", itemValue)}
+          selectedValue={publicacion.idTipoServicio}
+          onValueChange={(itemValue) => handleChange("idTipoServicio", itemValue)}
         >
           <Picker.Item label="Seleccione un servicio" value="" />
           {listaServicios.map((servicio) => (
@@ -51,8 +51,8 @@ export default function PublicacionForm( props ) {
         <Text style={styles.label}>Propiedad</Text>
         <Picker
             style={styles.picker}
-            selectedValue={formData.propiedad}
-            onValueChange={(itemValue) => handleChange("propiedad", itemValue)}
+            selectedValue={publicacion.idPropiedad}
+            onValueChange={(itemValue) => handleChange("idPropiedad", itemValue)}
         >
           <Picker.Item label="Seleccione una propiedad" value="" />
           {listaPropiedades.map((propiedad) => (
@@ -69,7 +69,7 @@ export default function PublicacionForm( props ) {
           style={styles.input}
           placeholder="$ 400 MXN"
           keyboardType="numeric"
-          value={formData.pagoOfrecido}
+          value={publicacion.pagoOfrecido}
           onChangeText={(text) => handleChange("pagoOfrecido", text)}
         />
   
@@ -78,7 +78,7 @@ export default function PublicacionForm( props ) {
           style={{...styles.input, ...styles.labelDescripcion}}
           placeholder="Descripción del trabajo"
           multiline
-          value={formData.descripcion}
+          value={publicacion.descripcion}
           onChangeText={(text) => handleChange("descripcion", text)}
         />
   
