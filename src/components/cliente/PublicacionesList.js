@@ -3,14 +3,12 @@ import React from 'react'
 import PublicacionCard from '../CardPublicaciones';
 
 export default function PublicacionesList( props ) {
-  const { publicaciones, onLongPress, setModalOptionVisible, closeModalOptions } = props;
+  const { publicaciones, openModalOptions } = props;
 
   const renderItem = ({ item }) => (
     <PublicacionCard
       publicacion={item}
-      onLongPress={onLongPress}
-      setModalOptionVisible={setModalOptionVisible}
-      closeModalOptions={closeModalOptions}
+      openModalOptions={(publicacion) => openModalOptions(publicacion)}
     />
   );
 

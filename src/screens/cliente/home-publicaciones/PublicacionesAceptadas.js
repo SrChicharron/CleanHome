@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import SinSolicitudes from "../../../components/SinSolicitudes";
 import ModalResenia from "../../../components/ModalResenia";
@@ -14,12 +14,24 @@ import PublicacionesList from "../../../components/cliente/PublicacionesList";
 
 export default function PublicacionesAceptadas( { publicaciones } ) {
   const navigation = useNavigation();
-  const [activeOption, setActiveOption] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [reseniaData, setReseniaData] = useState({
     calificacion: 0,
     resenia: "",
   });
+
+    // FUNCIÓN PARA FILTRAR LAS PUBLICACIONES ACTIVAS
+    const filtrarPublicacionesActivas = () => {
+      return publicaciones.filter(publicacion => publicacion.estatus === "aceptados");
+    }
+  
+    // Estado para almacenar las publicaciones activas
+  const [publicacionesActivas, setPublicacionesActivas] = useState(filtrarPublicacionesActivas());
+
+  useEffect(() => {
+    const publicacionesActivas = filtrarPublicacionesActivas();
+    setPublicacionesActivas(publicacionesActivas);
+  }, [publicaciones]);
 
   console.log("Desde publicaciones Aceptadas ---> ")
   // Función para actualizar el estado publicacion cuando cambie algún campo del formulario
@@ -50,7 +62,7 @@ export default function PublicacionesAceptadas( { publicaciones } ) {
 
   return (
       <View style={styles.container}>
-      {!publicaciones || publicaciones.length === 0 && (
+      {!publicacionesActivas || publicacionesActivas.length === 0 && (
         <SinSolicitudes 
           mensajeTitulo='No haz aceptado ninguna solicitud'
           mensajeDescripcion='Acepta a un trabajador para limpiar tu hogar'
@@ -60,7 +72,7 @@ export default function PublicacionesAceptadas( { publicaciones } ) {
       )}
 
         <PublicacionesList 
-          publicaciones={publicaciones} 
+          publicaciones={publicacionesActivas} 
           onLongPress={openModal}
           setModalOptionVisible={setModalVisible}
           closeModalOptions={closeModal}

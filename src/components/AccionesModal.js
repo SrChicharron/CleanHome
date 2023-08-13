@@ -2,9 +2,10 @@ import { View, Text, Modal, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export default function AccionesModal(props) {
-  const { modalOptionVisible, setModalOptionVisible, closeModalOptions, txtBtnBlue, txtBtnRed, onPressBlue, onPressRed } = props;
+  const { modalOptionVisible, closeModalOptions, txtBtnBlue, txtBtnRed, onPressBlue, onPressRed, publicacion } = props;
   return (
     <Modal
       animationType="slide"
@@ -22,10 +23,12 @@ export default function AccionesModal(props) {
                         size={24}
                 /></TouchableOpacity>
 
-                <TouchableOpacity onPress={onPressBlue} style={{...styles.buttonAceptar, ...styles.btn}}>
+                <TouchableOpacity onPress={() => onPressBlue (publicacion)} style={{...styles.buttonAceptar, ...styles.btn}}>
+                    <FontAwesomeIcon style={styles.iconEdit} icon={faPenToSquare} size={22} />
                     <Text style={styles.textButtons}>{txtBtnBlue}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={onPressRed} style={{...styles.buttonRechazar, ...styles.btn}}>
+                <TouchableOpacity onPress={() => onPressRed (publicacion)} style={{...styles.buttonRechazar, ...styles.btn}}>
+                    <FontAwesomeIcon style={styles.iconEdit} icon={faTrashCan} size={22} />
                     <Text style={styles.textButtons}>{txtBtnRed}</Text>
                 </TouchableOpacity>
             </View>
@@ -71,9 +74,19 @@ const styles = StyleSheet.create({
     buttonAceptar:{
         backgroundColor:'#075493',
         marginBottom: 16,
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    iconEdit: {
+        color: 'white',
+        marginEnd: 8,
     },
     buttonRechazar:{
         backgroundColor:'#F44336',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
     },
     textButtons: {
         color: '#fff',

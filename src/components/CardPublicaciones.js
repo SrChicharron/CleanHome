@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import WhatsAppIcon from "../assets/icons/WhatsAppIcon.svg";
 
 export default function CardPublicaciones( props ) {
-    const { publicacion, onLongPress, serModalOptionVisible, closeModalOptions } = props;
+    const { publicacion, openModalOptions } = props;
     const direccion = `${publicacion.propiedad.calle} ${publicacion.propiedad.numeroExt}, ${publicacion.propiedad.colonia}, ${publicacion.propiedad.codigoPostal}, ${publicacion.propiedad.estado.estado}`;
 
     const openWhatsAppchat = () => {
@@ -24,7 +24,7 @@ export default function CardPublicaciones( props ) {
     }
 
   return (
-    <TouchableOpacity style={styles.containerCard} activeOpacity={1} onLongPress={onLongPress}>
+    <TouchableOpacity style={styles.containerCard} activeOpacity={1} onLongPress={() => openModalOptions(publicacion)}>
         <>
             <Image source={HouseAspiradora} style={styles.img}/> 
             <View style={styles.containerInfo}>
@@ -55,8 +55,13 @@ const styles = StyleSheet.create({
         marginBottom: 4,
         resizeMode: 'center',
     },
-    containerInfo: {
-        
+    containerIconEdit: {
+        position: 'absolute',
+        top: 8,
+        right: 8,
+    },
+    iconEdit: {
+        color: '#075493',
 
     },
     txtDireccion: {
