@@ -5,47 +5,56 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import PublicacionForm from "./PublicacionForm";
 
-export default function ModalAddPublicacion( props ) {
-    const { modalVisible, closeModal, formData, handleChange, titleModal } = props;
+export default function ModalAddPublicacion(props) {
+    const { modalVisible, closeModal, publicacion, handleChange, titleModal, updatePublicacion, listaServicios, listaPropiedades, addPublicacion, indicador } = props;
 
     return (
         <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={closeModal}
+            visible={modalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={closeModal}
         >
-        <View style={styles.modalContainer} >
-            <View style={styles.containerForm}>
-                <View style={ styles.headerModal }>
-                    <Text style={ styles.titleModal }>{titleModal}</Text>
-                </View>
-                <TouchableOpacity style={ styles.closeButton } onPress={closeModal}>
-                    <FontAwesomeIcon
-                        icon={faXmark}
-                        style={styles.iconClose}
-                        size={24}
-                />
-                </TouchableOpacity>
-                <KeyboardAwareScrollView style={ styles.bodyModal }>
-                    {/* Formulario para crear una nueva publicación */}
-                    <PublicacionForm 
-                        formData={formData}
-                        handleChange={handleChange}
-                    />
-                </KeyboardAwareScrollView>
-                <View style={ styles.footerModal }>
-                    {/* Botones para publicar y cancelar */}
-                    <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
-                        <Text style={ styles.txtBtn }>Cancelar</Text>
+            <View style={styles.modalContainer} >
+                <View style={styles.containerForm}>
+                    <View style={styles.headerModal}>
+                        <Text style={styles.titleModal}>{titleModal}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                        <FontAwesomeIcon
+                            icon={faXmark}
+                            style={styles.iconClose}
+                            size={24}
+                        />
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }}>
-                        <Text style={ styles.txtBtn }>Publicar</Text>
-                    </TouchableOpacity>
-                </View>
+                    <KeyboardAwareScrollView style={styles.bodyModal}>
+                        {/* Formulario para crear una nueva publicación */}
+                        <PublicacionForm
+                            publicacion={publicacion}
+                            handleChange={handleChange}
+                            listaServicios={listaServicios}
+                            listaPropiedades={listaPropiedades}
+                        />
+                    </KeyboardAwareScrollView>
+                    <View style={styles.footerModal}>
+                        {/* Botones para publicar y cancelar */}
+                        <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
+                            <Text style={styles.txtBtn}>Cancelar</Text>
+                        </TouchableOpacity>
+                        {indicador === 'update' && (
+                            <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={updatePublicacion}>
+                                <Text style={styles.txtBtn}>Editar</Text>
+                            </TouchableOpacity>
+                        )}
+                        {indicador === 'add' && (
+                            <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={addPublicacion}>
+                                <Text style={styles.txtBtn}>Publicar</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
 
+                </View>
             </View>
-        </View>
         </Modal>
     );
 }

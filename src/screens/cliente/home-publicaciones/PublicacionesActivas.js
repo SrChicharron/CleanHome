@@ -2,44 +2,127 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
-  Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SinSolicitudes from "../../../components/SinSolicitudes";
-import CardPublicaciones from "../../../components/CardPublicaciones";
 import ModalPublicacion from "../../../components/ModalAddPublicacion";
 import AccionesModal from "../../../components/AccionesModal";
+import PublicacionesList from "../../../components/cliente/PublicacionesList";
+import useAuth from "../../../hooks/UseAuth";
 
-export default function PublicacionesActivas() {
-  const [activeOption, setActiveOption] = useState(false);
+export default function PublicacionesActivas({ publicaciones, onDeletePublicacion, onUpdatePublicacion, onAddPublicacion, listaServicios, listaPropiedades }) {
+  const { auth } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPublicacion, setTitleModalPublicacion] = useState("");
-  const [formData, setFormData] = useState({
-    tipoServicio: "",
-    propiedad: "",
-    pagoOfrecido: "",
-    descripcion: "",
+  const [indicador, setIndicador] = useState("");
+  const [publicacionData, setPublicacionData] = useState({
+    "id": 0,
+    "descripcion": "",
+    "estatus": "",
+    "fecha": "",
+    "pagoOfrecido": 0.0,
+    "usuario": {
+      "id": 0,
+      "name": "",
+      "lastname": "",
+      "cellphone": "",
+      "birthday": "",
+      "username": ""
+    },
+    "propiedad": {
+      "id": 0,
+      "titulo": "",
+      "calle": "",
+      "numeroExt": "",
+      "codigoPostal": "",
+      "colonia": "",
+      "referencias": "",
+      "estatus": "",
+      "tipoPropiedad": {
+        "id": 0,
+        "tipo": ""
+      },
+      "estado": {
+        "id": 0,
+        "estado": ""
+      },
+      "idUsuario": 0,
+      "foto": [],
+      "comprobante": []
+    },
+    "servicio": {
+      "id": 0,
+      "nombre": "",
+      "descripcion": ""
+    }
   });
 
-  // Función para actualizar el estado formData cuando cambie algún campo del formulario
+  // FUNCIÓN PARA FILTRAR LAS PUBLICACIONES ACTIVAS
+  const filtrarPublicacionesActivas = () => {
+    return publicaciones.filter(publicacion => publicacion.estatus === "activo");
+  }
+
+  // Estado para almacenar las publicaciones activas
+  const [publicacionesActivas, setPublicacionesActivas] = useState(filtrarPublicacionesActivas());
+
+  useEffect(() => {
+    const publicacionesActivas = filtrarPublicacionesActivas();
+    setPublicacionesActivas(publicacionesActivas);
+  }, [publicaciones]);
+
+  // Función para actualizar el estado publicacion cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
+    setPublicacionData({
+      ...publicacionData,
       [name]: value,
     });
-    console.log(formData)
+    console.log(JSON.stringify(publicacionData, null, 4))
   };
 
-  // Agregar función para formatear el objeto formData 
-  const formatFormData = () => {
-    setFormData({
-      tipoServicio: "",
-      propiedad: "",
-      pagoOfrecido: "",
-      descripcion: "",
+  // Agregar función para formatear el objeto publicacion 
+  const formatpublicacionData = () => {
+    setPublicacionData({
+      "id": 0,
+      "descripcion": "",
+      "estatus": "",
+      "fecha": "",
+      "pagoOfrecido": 0.0,
+      "usuario": {
+        "id": 0,
+        "name": "",
+        "lastname": "",
+        "cellphone": "",
+        "birthday": "",
+        "username": ""
+      },
+      "propiedad": {
+        "id": 0,
+        "titulo": "",
+        "calle": "",
+        "numeroExt": "",
+        "codigoPostal": "",
+        "colonia": "",
+        "referencias": "",
+        "estatus": "",
+        "tipoPropiedad": {
+          "id": 0,
+          "tipo": ""
+        },
+        "estado": {
+          "id": 0,
+          "estado": ""
+        },
+        "idUsuario": 0,
+        "foto": [],
+        "comprobante": []
+      },
+      "servicio": {
+        "id": 0,
+        "nombre": "",
+        "descripcion": ""
+      }
     });
   }
 
@@ -50,38 +133,63 @@ export default function PublicacionesActivas() {
 
   const closeModal = () => {
     setModalVisible(false);
-    formatFormData();
+    formatpublicacionData();
   };
 
-  const openModalOptions = () => {
+  const openModalOptions = (publicacion) => {
     console.log("openModalOptions")
+    setPublicacionData(publicacion);
     setModalOptionVisible(true);
   }
 
   const closeModalOptions = () => {
     setModalOptionVisible(false);
   }
-  const openModalPublicacion = () => {
+  const openModalPublicacion = (publicacion) => {
     console.log("openModalPublicacion")
+    setIndicador("update");
     setModalOptionVisible(false);
+    setPublicacionData(publicacion);
     openModal("Editar publicación");
   }
   const openModalPublicacionAdd = () => {
     console.log("openModalPublicacionAdd")
+    setIndicador("add");
     setModalOptionVisible(false);
     openModal("Agregar publicación");
   }
 
+  const deletePublicacion = (publicacion) => {
+    setModalOptionVisible(false);
+    onDeletePublicacion(publicacion);
+  }
+
+  const updatePublicacion = () => {
+    closeModal();
+    console.log("Publicación Data que se envia a editar =====>>>>> " + JSON.stringify(publicacionData, null, 4));
+    onUpdatePublicacion(publicacionData);
+    formatpublicacionData();
+  }
+
+  const addPublicacion = () => {
+    closeModal();
+    const newPublicacion = {
+      ...publicacionData,
+      id: undefined,
+      fecha: new Date(),
+      estatus: "activo",
+      usuario: {
+        ...publicacionData.usuario,
+        id: auth.idUsuario,
+      }
+    }
+    console.log("Publicación Data que se envia a agregar =====>>>>> " + JSON.stringify(newPublicacion, null, 4));
+    onAddPublicacion(newPublicacion);
+    formatpublicacionData();
+  }
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {activeOption === false && (
-        <SinSolicitudes
-          mensajeTitulo="No tienes publicaciones activas"
-          mensajeDescripcion="Publica un trabajo y elije al mejor trabajador para tí"
-          txtBtn="Publicar"
-          onPressBtn={() => console.log("Publicar")}
-        />
-      )}
+    <View style={styles.container}>
       <View style={styles.containerLinkAdd}>
         <TouchableOpacity
           style={styles.containerBtnLinkAdd}
@@ -90,34 +198,45 @@ export default function PublicacionesActivas() {
           <Text style={styles.txtAdd}>Agregar</Text>
         </TouchableOpacity>
       </View>
-      <CardPublicaciones 
-        onLongPress={ openModalOptions } 
-        setModalOptionVisible={setModalOptionVisible} 
-        closeModalOptions={closeModalOptions}
-        
-      />
-      <CardPublicaciones />
-      <CardPublicaciones />
 
-      <ModalPublicacion 
-        modalVisible={modalVisible} 
-        closeModal={closeModal} 
-        formData={formData}
+      {!publicacionesActivas || publicacionesActivas.length === 0 && (
+        <SinSolicitudes
+          mensajeTitulo="No tienes publicaciones activas"
+          mensajeDescripcion="Publica un trabajo y elije al mejor trabajador para tí"
+          txtBtn="Publicar"
+          onPressBtn={openModalPublicacionAdd}
+        />
+      )}
+
+      <PublicacionesList
+        publicaciones={publicacionesActivas}
+        openModalOptions={(publicacion) => openModalOptions(publicacion)}
+      />
+
+      <ModalPublicacion
+        modalVisible={modalVisible}
+        closeModal={closeModal}
+        publicacion={publicacionData}
         handleChange={handleChange}
-        formatFormData={formatFormData}
+        formatpublicacion={formatpublicacionData}
         titleModal={titleModalPublicacion}
+        updatePublicacion={updatePublicacion}
+        listaServicios={listaServicios}
+        listaPropiedades={listaPropiedades}
+        addPublicacion={addPublicacion}
+        indicador={indicador}
       />
 
       <AccionesModal
         modalOptionVisible={modalOptionVisible}
-        setModalOptionVisible={setModalOptionVisible}
         closeModalOptions={closeModalOptions}
         txtBtnBlue="Editar"
         txtBtnRed="Eliminar"
-        onPressBlue={openModalPublicacion}
-        onPressRed={() => console.log("Eliminar")}
+        onPressBlue={(publicacion) => openModalPublicacion(publicacion)}
+        onPressRed={(publicacion) => deletePublicacion(publicacion)}
+        publicacion={publicacionData}
       />
-    </ScrollView>
+    </View>
   );
 }
 
