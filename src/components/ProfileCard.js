@@ -7,9 +7,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProfileCard( props ) {
-    const { formData, handleChange } = props; 
+    const { formData, handleChange, auth, infoUser } = props; 
     const [image, setImage] = useState(null);
-
+    
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -28,16 +28,17 @@ export default function ProfileCard( props ) {
       };
 
   return (
+    
     <View style={styles.container}>
         <TouchableOpacity 
             style={styles.containerImage} 
             onPress={() => pickImage()}
         >
-            <Image source={{uri: formData.urlImgProfile}} style={styles.profileImg}/>
+            <Image style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
         </TouchableOpacity>
-        <Text style={styles.txtName}>{formData.nombre}Carlos Ricardo {formData.apellido}Espinoza Pliego</Text>
-        <Text style={styles.txtRol}>{formData.rol}Trabajador</Text>
+        <Text style={styles.txtName}>{infoUser?infoUser.name:''} {infoUser?infoUser.lastname:''}</Text>
+        <Text style={styles.txtRol}>{auth.rol}</Text>
     </View>
   )
 }

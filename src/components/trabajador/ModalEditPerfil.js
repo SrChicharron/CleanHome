@@ -1,13 +1,34 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Alert } from "react-native";
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 import EditProfileForm from "./EditProfileForm";
+import axios from "axios";
 
 export default function ModalEditPerfil(props) {
-    const { modalVisible, closeModal, formData, handleChange } = props;
+    const { modalVisible, closeModal, formData, handleChange, auth, infoUser } = props;
+    const actualizarInfo = () => {
+        const urlupdateInfo=`http://192.168.1.154:2813/ch/auth/editarInfoUser/${auth.username}`
+        axios({
+          method: "PUT",
+          url: urlupdateInfo,
+          data: JSON.stringify(formData),
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers":
+              "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+            "Content-Type": "application/json",
+          },
+        }).then(response => {
+          console.log(response.status)
+          Alert.alert('Información atualizada con éxito!','Revisa que la información se haya guardado correctamente.')
+          closeModal();
+        }).catch(error => {
+          console.log(error);
+        })
+      };
     
     return (
         <Modal
@@ -30,14 +51,14 @@ export default function ModalEditPerfil(props) {
                     </TouchableOpacity>
                     <KeyboardAwareScrollView style={styles.bodyModal}>
                         {/* Formulario para crear una nueva publicación */}
-                        <EditProfileForm formData={formData} handleChange={handleChange} />
+                        <EditProfileForm formData={formData} handleChange={handleChange} auth={auth} infoUser={infoUser}/>
                     </KeyboardAwareScrollView>
                     <View style={styles.footerModal}>
                         {/* Botones para publicar y cancelar */}
                         <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
                             <Text style={styles.txtBtn}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }}>
+                        <TouchableOpacity onPress={actualizarInfo} style={{ ...styles.btnPublicar, ...styles.btn }}>
                             <Text style={styles.txtBtn}>Editar</Text>
                         </TouchableOpacity>
                     </View>

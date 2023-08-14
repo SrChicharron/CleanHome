@@ -19,22 +19,28 @@ export default function EditProfileForm(props) {
             <Text style={styles.label}>Nombre</Text>
             <TextInput
                 style={styles.input}
-                value={formData.nombre}
-                onChangeText={(text) => handleChange("nombre", text)}
+                value={formData.name}
+                onChangeText={(text) => handleChange("name", text)}
+            />
+            <Text style={styles.label}>Apellidos</Text>
+            <TextInput
+                style={styles.input}
+                value={formData.lastname}
+                onChangeText={(text) => handleChange("lastname", text)}
             />
             <Text style={styles.label}>Correo electrónico</Text>
             <TextInput
                 style={styles.input}
-                value={formData.correo}
-                onChangeText={(text) => handleChange("correo", text)}
+                
+                onChangeText={(text) => handleChange("email", text)}
             />
             <Text style={styles.label}>Número de celular</Text>
             <TextInput
                 style={styles.input}
-                value={formData.celular}
+                value={formData.cellphone}
                 keyboardType="numeric"
                 maxLength={10}
-                onChangeText={(text) => handleChange("celular", text)}
+                onChangeText={(text) => handleChange("cellphone", text)}
             />
             <Text style={styles.label}>Descripción</Text>
             <TextInput
