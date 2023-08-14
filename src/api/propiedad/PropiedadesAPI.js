@@ -1,6 +1,6 @@
 import axios from 'axios'
 //import {API_URL} from '@env'
-const API_URL= 'http://192.168.200.218:2813/ch'
+const API_URL= 'http://192.168.0.109:2813/ch'
 export const fetchEstados = async () => {
   try {
     const response = await axios.get(API_URL+"/catalogo/getEstados");
@@ -119,6 +119,7 @@ export const fetchTipos = async () => {
         },
     }).then(response=>{
       console.log(response.data);
+      console.log("propiedad eliminada correctamente");
       return response.data;
     }).catch(error=>{
     console.log(error);

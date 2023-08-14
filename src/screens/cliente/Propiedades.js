@@ -25,7 +25,24 @@ export default function Propiedades() {
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPropiedad, setTitleModalPropiedad] = useState("");
   const [propiedades, setPropiedades] = useState([]);
-  const [propiedadEdicion, setPropiedadEdicion]=useState({});
+  const [propiedadEdicion, setPropiedadEdicion]=useState({
+    id:"",
+    titulo: "",
+    calle: "",
+    numeroExt: "",
+    codigoPostal: "",
+    colonia: "",
+    referencias: "",
+    estatus: "pendiente",
+    estado:{
+      id:"",
+      estado:""},
+    tipoPropiedad:{
+      id:"",
+      tipo:""
+      },
+    idUsuario:auth.idUsuario
+  });
   //form para gardar la info y enviarla al back
   const [formData, setFormData] = useState({
     id:"",
@@ -172,15 +189,31 @@ export default function Propiedades() {
     const regProp=registrarPropiedad(formData,imagenes,comprobantes);
     formatFormData();
     closeModal();
-    //const subFot=subirFotosPropiedad(imagenes,comprobantes,9)
   }
   //para eliminar
   const handleDelete =() =>{
+    setFormData({
+      id:propiedadEdicion.id,
+      titulo: propiedadEdicion.titulo,
+      calle: propiedadEdicion.calle,
+      numeroExt: propiedadEdicion.numeroExt,
+      codigoPostal: propiedadEdicion.codigoPostal,
+      colonia: propiedadEdicion.colonia,
+      referencias: propiedadEdicion.referencias,
+      estatus: "pendiente",
+      estado:{
+        id:propiedadEdicion.estado.id,
+        estado:propiedadEdicion.estado.estado},
+      tipoPropiedad:{
+        id:propiedadEdicion.tipoPropiedad.id,
+        tipo:propiedadEdicion.tipoPropiedad.tipo
+        },
+      idUsuario:propiedadEdicion.idUsuario
+      });
     console.log(formData);
     const deleteProp=deletePropiedad(formData)
     formatFormData();
-    closeModal();
-    //const subFot=subirFotosPropiedad(imagenes,comprobantes,9)
+    closeModalOptions();
   }
   // Simulación de llamada a API para obtener los servicios
   useEffect(() => {

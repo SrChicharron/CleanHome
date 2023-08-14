@@ -17,7 +17,10 @@ export default function CardPropiedades(props) {
   } = props;
   const longPress = () => {
     setPropiedadEdicion(propiedadData);
-    onLongPress();
+    console.log(propiedadEdicion);
+    if(propiedadEdicion.id!==""){
+      onLongPress();
+    }
   };
   // Cons para hacer la dirección con los datos de formData
   const fotos=propiedadData.foto;
