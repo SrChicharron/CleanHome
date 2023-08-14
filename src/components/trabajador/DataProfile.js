@@ -7,27 +7,27 @@ import CakeIcon from "../../assets/icons/CakeIcon.svg";
 import ResenaCard from "../ResenaCard";
 
 export default function DataProfile( props ) {
-    const { formData, titleResenias } = props;
+    const { formData, titleResenias, auth, infoUser } = props;
 
   return (
     <View>
       <Text style={styles.titleInfo}>Información personal</Text>
-      <Text style={styles.txtDescripcion}>Me dedico a trabajar la limpieza en general de las casas, puedo limpiar desde cuartos, cocinas, cocheras, baños, lavar trastes, barrer, trapear, todo lo que sea necesario para dejar tu casa limpia.</Text>
+      <Text style={styles.txtDescripcion}>{infoUser?infoUser.descripcion:'Escribe una breve descripcion en `Editar`'}</Text>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faUser} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{formData.nombre}Carlos Ricardo Espinoza Pliego</Text>
+        <Text style={styles.txtLabels}>{infoUser?infoUser.name:''}{infoUser?infoUser.lastname:''}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faEnvelope} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{formData.correo}carlospliego226@gmail.com</Text>
+        <Text style={styles.txtLabels}>{auth.email}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faMobileScreen} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{formData.celular}7772673669</Text>
+        <Text style={styles.txtLabels}>{infoUser?infoUser.cellphone:''}</Text>
       </View>
       <View style={styles.containerInfo}>
         <CakeIcon style={styles.icons} />
-        <Text style={styles.txtLabels}>{formData.celular}7772673669</Text>
+        <Text style={styles.txtLabels}>{infoUser?infoUser.birthday:''}</Text>
       </View>
       <Text style={styles.titleResenias}>{titleResenias}</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
