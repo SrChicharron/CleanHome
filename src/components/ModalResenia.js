@@ -6,7 +6,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ReseniaForm from "./ReseniaForm";
 
 export default function ModalResenia( props ) {
-    const { modalVisible, closeModal, publicaciones, handleChange, titleModal } = props;
+    const { modalVisible, closeModal, publicaciones, handleChange } = props;
     return (
         <Modal
         visible={modalVisible}

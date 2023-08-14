@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import WhatsAppIcon from "../assets/icons/WhatsAppIcon.svg";
 
 export default function CardPublicaciones( props ) {
-    const { publicacion, openModalOptions } = props;
+    const { publicacion, openModalOptions, openModalResenia } = props;
     const direccion = `${publicacion.propiedad.calle} ${publicacion.propiedad.numeroExt}, ${publicacion.propiedad.colonia}, ${publicacion.propiedad.codigoPostal}, ${publicacion.propiedad.estado.estado}`;
 
     const openWhatsAppchat = () => {
@@ -23,8 +23,18 @@ export default function CardPublicaciones( props ) {
             .catch(err => console.error("An error occurred", err));
     }
 
+    const onLongPress = () => {
+        if (publicacion.estatus === 'aceptados') {
+            openModalResenia();
+        } else if (publicacion.estatus === 'activo') {
+            openModalOptions(publicacion);
+        } else {
+            null
+        }
+    }
+
   return (
-    <TouchableOpacity style={styles.containerCard} activeOpacity={1} onLongPress={() => openModalOptions(publicacion)}>
+    <TouchableOpacity style={styles.containerCard} activeOpacity={1} onLongPress={onLongPress}>
         <>
             <Image source={HouseAspiradora} style={styles.img}/> 
             <View style={styles.containerInfo}>
