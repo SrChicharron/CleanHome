@@ -9,8 +9,10 @@ import React, { useState } from "react";
 import ModalEditPerfil from "../../components/trabajador/ModalEditPerfil";
 import ProfileCard from "../../components/ProfileCard";
 import DataProfile from "../../components/trabajador/DataProfile";
+import useAuth from '../../hooks/UseAuth';
 
 export default function Cuenta() {
+  const { logout } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     nombre: "",
@@ -66,6 +68,12 @@ export default function Cuenta() {
         >
           <Text style={styles.txtAdd}>Editar</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.containerBtnLinkAdd}
+          onPress={logout}
+        >
+          <Text style={styles.txtAdd}>Cerrar sesión</Text>
+        </TouchableOpacity>
       </View>
       <ProfileCard 
         formData={formData}
@@ -91,7 +99,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   containerLinkAdd: {
-    alignItems: "flex-end",
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   containerBtnLinkAdd: {
     borderRadius: 8,
