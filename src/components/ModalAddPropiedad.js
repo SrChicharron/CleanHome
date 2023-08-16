@@ -6,7 +6,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import PropiedadForm from "./PropiedadForm";
 
 export default function ModalAddPropiedad ( props ) {
-    const { modalVisible, closeModal, formData, handleChange, titleModal } = props;
+    const { modalVisible, closeModal, handleRegister ,formData, handleChange, handleImagenes, handleComprobantes, titleModal } = props;
 
     return (
         <Modal
@@ -32,6 +32,8 @@ export default function ModalAddPropiedad ( props ) {
                     <PropiedadForm 
                         formData={formData}
                         handleChange={handleChange}
+                        handleImagenes={handleImagenes}
+                        handleComprobantes={handleComprobantes}
                     />
                 </KeyboardAwareScrollView>
                 <View style={ styles.footerModal }>
@@ -39,7 +41,7 @@ export default function ModalAddPropiedad ( props ) {
                     <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
                         <Text style={ styles.txtBtn }>Cancelar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }}>
+                    <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={handleRegister}>
                         <Text style={ styles.txtBtn }>Publicar</Text>
                     </TouchableOpacity>
                 </View>

@@ -3,48 +3,65 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import HouseAspiradora from "../assets/images/HouseAspiradora.png";
+import Swiper from 'react-native-swiper';
 
 export default function CardPropiedades(props) {
   const {
-    formData,
+    propiedadData,
+    propiedadEdicion,
+    setPropiedadEdicion,
     onLongPress,
   } = props;
-
+  const longPress = () => {
+    setPropiedadEdicion(propiedadData);
+    console.log(propiedadEdicion);
+    if(propiedadEdicion.id!==""){
+      onLongPress();
+    }
+  };
   // Cons para hacer la dirección con los datos de formData
-    const direccion = formData.calle + " " + formData.numero + ", " + formData.colonia + ", " + formData.codigoPostal + ", " + formData.estado;
+  const fotos=propiedadData.foto;
+    const direccion = propiedadData.calle + " " + propiedadData.numeroExt + ", " + propiedadData.colonia + ", " + propiedadData.codigoPostal + ", " + propiedadData.estado.estado;
   return (
     <TouchableOpacity
       style={styles.containerCard}
       activeOpacity={1}
-      onLongPress={onLongPress}
+      onLongPress={longPress}
     >
       <>
-        <Image source={HouseAspiradora} style={styles.img} />
+        
+        <Swiper style={styles.swiperContainer}>
+        {fotos.map(imageData => (
+        <Image 
+        key={imageData.id}
+        source={{ uri: `http://74.208.25.75/images/cleanhome/${imageData.foto}` }}
+        style={styles.img}
+      />
+      ))}
+
+        </Swiper>
         <View style={styles.containerInfo}>
           <Text style={styles.txtDireccion}>
-            {direccion}Torres Bases, Querétaro, Qro.
+            {direccion}
           </Text>
-          <Text style={styles.txtTituloCasa}>{formData.tituloCasa}Casa del centro</Text>
+          <Text style={styles.txtTituloCasa}>{propiedadData.titulo}</Text>
           <Text style={styles.txtTituloCasa}>
-            Tipo de propiedad: {formData.tipoPropiedad}Casa
+            Tipo de propiedad: {propiedadData.tipoPropiedad.tipo}
           </Text>
           <Text style={styles.txtReferencias}>
-            {formData.referencias}La casa está ubicada entre calle Revolución y Av Paseo
-            de las Peñas
+            {propiedadData.referencias}
           </Text>
           <View
             style={[
               styles.containerIsApproved,
               {
                 backgroundColor:
-                formData.estatus === "aprobado"
+                propiedadData.estatus === "aprobado"
                     ? "#D4F4E2"
-                    : formData.estatus === "rechazado"
+                    : propiedadData.estatus === "rechazado"
                     ? "#EE7677"
                     : "#E6E6E6",
               },
@@ -54,11 +71,11 @@ export default function CardPropiedades(props) {
               styles.txtIsApproved,
               {
                 color:
-                formData.estatus === "rechazado"
+                propiedadData.estatus === "rechazado"
                     ? "#fff"
                     : "#000",
               },
-            ]}>{formData.estatus}</Text>
+            ]}>{propiedadData.estatus}</Text>
           </View>
         </View>
       </>
@@ -103,5 +120,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 12,
 
+  },
+  swiperContainer: {
+    height:300, 
   },
 });

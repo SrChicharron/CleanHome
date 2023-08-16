@@ -5,29 +5,34 @@ import { faUser, faEnvelope, } from "@fortawesome/free-regular-svg-icons";
 import { faMobileScreen } from "@fortawesome/free-solid-svg-icons";
 import CakeIcon from "../../assets/icons/CakeIcon.svg";
 import ResenaCard from "../ResenaCard";
+import useAuth from "../../hooks/UseAuth";
+import {format} from 'date-fns';
 
 export default function DataProfile( props ) {
-    const { formData, titleResenias } = props;
+    const { userData, titleResenias } = props;
+    const { auth } = useAuth();
+
+    const birthday = format(new Date(userData.birthday), 'dd/MM/yyyy');
 
   return (
     <View>
       <Text style={styles.titleInfo}>Información personal</Text>
-      <Text style={styles.txtDescripcion}>Me dedico a trabajar la limpieza en general de las casas, puedo limpiar desde cuartos, cocinas, cocheras, baños, lavar trastes, barrer, trapear, todo lo que sea necesario para dejar tu casa limpia.</Text>
+      <Text style={styles.txtDescripcion}>{userData.descripcion}</Text>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faUser} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{formData.nombre}Carlos Ricardo Espinoza Pliego</Text>
+        <Text style={styles.txtLabels}>{userData.name} {userData.lastname}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faEnvelope} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{formData.correo}carlospliego226@gmail.com</Text>
+        <Text style={styles.txtLabels}>{auth.email}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faMobileScreen} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{formData.celular}7772673669</Text>
+        <Text style={styles.txtLabels}>{userData.cellphone}</Text>
       </View>
       <View style={styles.containerInfo}>
         <CakeIcon style={styles.icons} />
-        <Text style={styles.txtLabels}>{formData.celular}7772673669</Text>
+        <Text style={styles.txtLabels}>{birthday}</Text>
       </View>
       <Text style={styles.titleResenias}>{titleResenias}</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
