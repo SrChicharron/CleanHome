@@ -4,9 +4,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ReseniaForm from "./ReseniaForm";
+import { format } from "date-fns";
 
 export default function ModalReseniaTrabajo(props) {
-    const { modalVisible, closeModal, formData, handleChange } = props;
+    const { modalVisible, closeModal, formDataResenia, handleChange, resenia, onAddResena } = props;
+    const direccion = `${formDataResenia.propiedad.calle} ${formDataResenia.propiedad.numeroExt}, ${formDataResenia.propiedad.colonia}, ${formDataResenia.propiedad.codigoPostal}, ${formDataResenia.propiedad.estado.estado}`;
+   
     return (
         <Modal
             visible={modalVisible}
@@ -17,7 +20,7 @@ export default function ModalReseniaTrabajo(props) {
             <View style={styles.modalContainer} >
                 <View style={styles.containerForm}>
                     <View style={styles.headerModal}>
-                        <Text style={styles.titleModal}>Deja una reña y da por finalizado{"\n"}el trabajo</Text>
+                        <Text style={styles.titleModal}>Deja una reseña y da por finalizado{"\n"}el trabajo</Text>
                     </View>
                     <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
                         <FontAwesomeIcon
@@ -27,23 +30,23 @@ export default function ModalReseniaTrabajo(props) {
                         />
                     </TouchableOpacity>
                     <KeyboardAwareScrollView style={styles.bodyModal}>
-                        <Text style={styles.txtDireccion}>{formData.direccion}</Text>
-                        <Text style={styles.txtPropietario}>{formData.propietario}</Text>
+                        <Text style={styles.txtDireccion}>{direccion}</Text>
+                        <Text style={styles.txtPropietario}>{formDataResenia.cliente.name} {formDataResenia.cliente.lastname}</Text>
                         <View style={styles.containerDescription}>
-                            <Text style={styles.txtDescripcion}>{formData.descripcion}</Text>
+                            <Text style={styles.txtDescripcion}>{formDataResenia.publicacion.descripcion}</Text>
 
                         </View>
-                        <Text style={styles.txtSueldo}>${formData.sueldo} </Text>
-                        <Text style={styles.txtFecha}>{formData.fechaPublicacion}</Text>
+                        <Text style={styles.txtSueldo}>${formDataResenia.publicacion.pagoOfrecido} </Text>
+                        <Text style={styles.txtFecha}>Fecha de publicación: {format(new Date(formDataResenia.publicacion.fecha), "dd/MM/yyyy")}</Text>
                         {/* Formulario para crear una nueva publicación */}
-                        <ReseniaForm formData={formData} handleChange={handleChange} />
+                        <ReseniaForm handleChange={handleChange} resenia={resenia} />
                     </KeyboardAwareScrollView>
                     <View style={styles.footerModal}>
                         {/* Botones para publicar y cancelar */}
                         <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
                             <Text style={styles.txtBtn}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }}>
+                        <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={onAddResena}>
                             <Text style={styles.txtBtn}>Enviar y finalizar</Text>
                         </TouchableOpacity>
                     </View>
