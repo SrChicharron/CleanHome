@@ -17,7 +17,7 @@ export default function Finalizados( { postulaciones } ) {
 
     // FUNCIÓN PARA FILTRAR LAS POSTULACIONES FINALIZADAS
     const filterPostulacionesFinalizadas = () => {
-        return postulaciones.filter(postulacion => postulacion.estatus === 'finalizados');
+        return postulaciones.filter(postulacion => postulacion.estatus === 'finalizada');
     }
 
     return (

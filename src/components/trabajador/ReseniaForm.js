@@ -3,17 +3,16 @@ import React, { useState} from "react";
 import StarRating from "react-native-star-rating-widget";
 
 export default function ReseniaForm( props ) {
-    const { formData, handleChange } = props;
+    const { handleChange, resenia } = props;
 
     return (
       <View style={styles.container}>
-        <StarRating rating={formData.calificacion} onChange={(rating) => handleChange("calificacion", rating)} starSize={54} style={styles.starRating}/>
+        <StarRating onChange={(rating) => handleChange("calificacion", rating)} rating={resenia.calificacion} starSize={54} style={styles.starRating}/>
         <TextInput
           style={{ ...styles.input, ...styles.labelDescripcion }}
           placeholder="Escribe una reseña del trabajador (opcional)"
           multiline
-          value={formData.resenia}
-          onChangeText={(resenia) => handleChange("resenia", resenia)}
+          onChangeText={(resenia) => handleChange("comentarios", resenia)}
         />
       </View>
     );

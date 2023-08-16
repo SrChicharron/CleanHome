@@ -4,9 +4,11 @@ import Pendientes from "./postulaciones/Pendientes";
 import Aceptadas from "./postulaciones/Aceptadas";
 import Finalizados from "./postulaciones/Finalizados";
 import { getPostulaciones } from "../../api/trabajador/PostulacionesApi";
+import useAuth from "../../hooks/UseAuth";
 
 export default function Postulaciones() {
-  const [activeOption, setActiveOption] = useState("activo");
+  const { auth } = useAuth();
+  const [activeOption, setActiveOption] = useState("pendiente");
   const [postulaciones, setPostulaciones] = useState([]);
 
   useEffect(() => {
@@ -14,8 +16,9 @@ export default function Postulaciones() {
   }, [postulaciones]);
 
   const loadPostulaciones = async () => {
-    const response = await getPostulaciones();
+    const response = await getPostulaciones(auth.idUsuario);
     setPostulaciones(response);
+    // console.log("Postulaciones: ", JSON.stringify(response, null, 4));
   };
 
   const handleOptionClick = (option) => {
@@ -32,14 +35,14 @@ export default function Postulaciones() {
         <TouchableOpacity
           style={[
             styles.containerTextFilter,
-            activeOption === "activo" && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
+            activeOption === "pendiente" && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
           ]}
-          onPress={() => handleOptionClick("activo")}
+          onPress={() => handleOptionClick("pendiente")}
         >
           <Text
             style={[
               styles.textFilter,
-              activeOption === "activo" && styles.activeOptionTxtBtnFilter,
+              activeOption === "pendiente" && styles.activeOptionTxtBtnFilter,
             ]}
           >
             Pendientes
@@ -48,14 +51,14 @@ export default function Postulaciones() {
         <TouchableOpacity
           style={[
             styles.containerTextFilter,
-            activeOption === "aceptados" && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
+            activeOption === "aceptada" && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
           ]}
-          onPress={() => handleOptionClick("aceptados")}
+          onPress={() => handleOptionClick("aceptada")}
         >
           <Text
             style={[
               styles.textFilter,
-              activeOption === "aceptados" && styles.activeOptionTxtBtnFilter,
+              activeOption === "aceptada" && styles.activeOptionTxtBtnFilter,
             ]}
           >
             Aceptados
@@ -64,27 +67,27 @@ export default function Postulaciones() {
         <TouchableOpacity
           style={[
             styles.containerTextFilter,
-            activeOption === "finalizados" && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
+            activeOption === "finalizada" && styles.activeOptionBtnFilter, // Estilo condicional para el botón activo
           ]}
-          onPress={() => handleOptionClick("finalizados")}
+          onPress={() => handleOptionClick("finalizada")}
         >
           <Text
             style={[
               styles.textFilter,
-              activeOption === "finalizados" && styles.activeOptionTxtBtnFilter,
+              activeOption === "finalizada" && styles.activeOptionTxtBtnFilter,
             ]}
           >
             Finalizados
           </Text>
         </TouchableOpacity>
       </View>
-      {activeOption === "activo" && (
+      {activeOption === "pendiente" && (
         <Pendientes postulaciones={postulaciones} />
       )}
-      {activeOption === "aceptados" && (
+      {activeOption === "aceptada" && (
         <Aceptadas postulaciones={postulaciones} />
       )}
-      {activeOption === "finalizados" && (
+      {activeOption === "finalizada" && (
         <Finalizados postulaciones={postulaciones} />
       )}
     </View>

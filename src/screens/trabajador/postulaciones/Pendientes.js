@@ -17,7 +17,7 @@ export default function Pendientes( { postulaciones } ) {
     
     // FUNCIÓN PARA FILTRAR LAS PUBLICACIONES PENDIENTES
     const filterPostulacionesPendientes = () => {
-        return postulaciones.filter(postulacion => postulacion.estatus === 'activo');
+        return postulaciones.filter(postulacion => postulacion.estatus === 'pendiente');
     }
     
 

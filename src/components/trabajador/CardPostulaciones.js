@@ -13,12 +13,12 @@ import MapsIcon from "../../assets/icons/MapsIcon.svg";
 import { format } from "date-fns";
 
 export default function CardPostulaciones(props) {
-  const { postulacion, activeOpacity, onLongPress } = props;
+  const { postulacion, activeOpacity, openModal } = props;
 
   const direccion = `${postulacion.propiedad.calle} ${postulacion.propiedad.numeroExt}, ${postulacion.propiedad.colonia}, ${postulacion.propiedad.codigoPostal}, ${postulacion.propiedad.estado.estado}`;
 
   const openWhatsAppchat = () => {
-    const urlOpenWhatsApp = `https://wa.me/${postulacion.usuario.cellphone}`;
+    const urlOpenWhatsApp = `https://wa.me/${postulacion.cliente.cellphone}`;
 
     Linking.canOpenURL(urlOpenWhatsApp)
       .then((supported) => {
@@ -39,11 +39,19 @@ export default function CardPostulaciones(props) {
     .catch((err) => console.error("Error al abrir Google Maps: ", err));
 };
 
+const onLongPress = () => {
+    if (postulacion.estatus === "aceptada") {
+        openModal(postulacion);
+    } else {
+        return null;
+    }
+}
+
   return (
     <TouchableOpacity
       style={styles.containerCard}
       activeOpacity={activeOpacity}
-      onLongPress={null}
+      onLongPress={onLongPress}
     >
       <Image source={Room} style={styles.img} />
       <View style={styles.containerInfo}>
@@ -51,25 +59,25 @@ export default function CardPostulaciones(props) {
           <Text style={styles.txtDireccion}>{direccion}</Text>
         </View>
         <Text style={styles.txtPropietario}>
-          {postulacion.usuario.name} {postulacion.usuario.lastname}
+          {postulacion.cliente.name} {postulacion.cliente.lastname}
         </Text>
         <View style={styles.containerDescription}>
-          <Text style={styles.txtDescripcion}>{postulacion.descripcion}</Text>
+          <Text style={styles.txtDescripcion}>{postulacion.publicacion.descripcion}</Text>
         </View>
-        <Text style={styles.txtSueldo}>${postulacion.pagoOfrecido} </Text>
-        {postulacion.estatus === "aceptados" ? (
+        <Text style={styles.txtSueldo}>${postulacion.publicacion.pagoOfrecido} </Text>
+        {postulacion.estatus === "aceptada" ? (
           <Text style={styles.txtFecha}>
-            {format(new Date(postulacion.fecha), "dd/MM/yyyy")}
+            {format(new Date(postulacion.publicacion.fecha), "dd/MM/yyyy")}
           </Text>
         ) : (
           <Text style={styles.txtFecha}>
             Fecha de publicación:{" "}
-            {format(new Date(postulacion.fecha), "dd/MM/yyyy")}
+            {format(new Date(postulacion.publicacion.fecha), "dd/MM/yyyy")}
           </Text>
         )}
       </View>
       {/* validación si formData.isAceppted es aceptado aparezca el icono de whatsapp */}
-      {postulacion.estatus === "aceptados" && (
+      {postulacion.estatus === "aceptada" && (
         <View style={styles.containerIcons}>
           <TouchableOpacity onPress={openWhatsAppchat}>
             <WhatsAppIcon style={styles.waIcon} width={28} height={28} />
