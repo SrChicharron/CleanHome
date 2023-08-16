@@ -1,40 +1,57 @@
 import axios from 'axios'
 //import {API_URL} from '@env'
 const API_URL= 'http://192.168.0.109:2813/ch'
-export const fetchEstados = async () => {
+export const fetchEstados = async (token) => {
   try {
-    const response = await axios.get(API_URL+"/catalogo/getEstados");
+    const response = await axios.get(API_URL+"/catalogo/getEstados", {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching data: ", error);
   }
 };
 
-export const fetchTipos = async () => {
+export const fetchTipos = async (token) => {
     try {
-      const response = await axios.get(API_URL+"/catalogo/getTipos");
+      const response = await axios.get(API_URL+"/catalogo/getTipos", {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 
-  export const fetchPropiedades = async (idCliente) => {
+  export const fetchPropiedades = async (idCliente, token) => {
+    console.log(token);
     try {
-      const response = await axios.get(API_URL+"/propiedad/getPropiedades?idCliente="+idCliente);
+      const response = await axios.get(API_URL+"/propiedad/getPropiedades?idCliente="+idCliente, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
   };
 //registro de propiedades en 3 pasos
-  export const registrarPropiedad = async(formData, fotos, comprobantes)=>{
+  export const registrarPropiedad = async(formData, fotos, comprobantes, token)=>{
 
     axios({
       method:"POST",
       url:API_URL+"/propiedad/addPropiedad",
       data: JSON.stringify(formData),
       headers: {
+        'Authorization': `Bearer ${token}`,
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Headers":
           "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
@@ -45,11 +62,11 @@ export const fetchTipos = async () => {
     console.log(fotos)
     //si se envian fotos se guardan
     if(fotos.length>0){
-      const uploadFotos=subirFotosPropiedad(fotos, response.data.id);
+      const uploadFotos=subirFotosPropiedad(fotos, response.data.id, token);
     }
     //se guardan comprobantes
     if(comprobantes.length>0){
-      const uploadFotos=subirComprobantesPropiedad(comprobantes, response.data.id);
+      const uploadFotos=subirComprobantesPropiedad(comprobantes, response.data.id, token);
     }
     return response.data;
   }).catch(error=>{
@@ -58,7 +75,7 @@ export const fetchTipos = async () => {
   
   }
 
-  export const subirFotosPropiedad = async(fotos, idPropiedad)=>{
+  export const subirFotosPropiedad = async(fotos, idPropiedad, token)=>{
   const formData = new FormData();
 
   fotos.forEach((uri, index) => {
@@ -73,6 +90,7 @@ export const fetchTipos = async () => {
   try {
       const response = await axios.post(API_URL+'/propiedad/addFotos', formData, {
         headers: {
+          'Authorization': `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       } );
@@ -82,7 +100,7 @@ export const fetchTipos = async () => {
   }
   }
 
-  export const subirComprobantesPropiedad = async(comprobantes, idPropiedad)=>{
+  export const subirComprobantesPropiedad = async(comprobantes, idPropiedad, token)=>{
     const formData = new FormData();
   
     comprobantes.forEach((uri, index) => {
@@ -96,6 +114,7 @@ export const fetchTipos = async () => {
     try {
         const response = await axios.post(API_URL+'/propiedad/addComprobantes', formData, {
           headers: {
+            'Authorization': `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         } );
@@ -106,12 +125,13 @@ export const fetchTipos = async () => {
     }
 
 
-    export const deletePropiedad = async(formData)=>{
+    export const deletePropiedad = async(formData, token)=>{
       axios({
         method:"POST",
         url:API_URL+"/propiedad/deletePropiedad",
         data: JSON.stringify(formData),
         headers: {
+          'Authorization': `Bearer ${token}`,
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Headers":
             "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
