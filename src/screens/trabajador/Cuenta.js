@@ -148,8 +148,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   containerLinkAdd: {
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   containerBtnLinkAdd: {
     borderRadius: 8,
