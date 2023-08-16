@@ -1,64 +1,116 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
-
-import PubLimpiezaprofunda from './Home-tipolimpieza/PubLimpiezaprofunda';
 import PubEspacioscomerciales from './Home-tipolimpieza/PubEspacioscomerciales';
 import PubOrganizacionyorden from './Home-tipolimpieza/PubOrganizacionyorden';
+import {
+  getPublicaciones
+
+
+} from "../../api/trabajador/PostulacionesApi";
+import PubLimpiezaHogar from './Home-tipolimpieza/PubLimpiezaHogar';
+
 
 export default function Home() {
-  const [activeOption, setActiveOption] = useState('Limpiezaprofunda');
 
-  const handleOptionClick = (option) => {
-    setActiveOption(option);
+
+  const [filterOption, setFilterOption] = useState("Limpieza Hogar");
+  const [publicaciones, setPublicaciones] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleFilterClick = (option) => {
+    setFilterOption(option);
   };
-  
 
- 
+
+  useEffect(() => {
+    loadPublicaciones();
+
+  }, []);
+
+
+  const loadPublicaciones = async () => {
+    const responseData = await getPublicaciones();
+    setPublicaciones(responseData.reverse());
+    console.log(JSON.stringify(publicaciones, null, 4))
+  };
+
+  const openModal = () => {
+    setModalVisible(true)
+  }
+  const closeModal = () => {
+    setModalVisible(false)
+  }
+
+
 
   return (
     <View style={styles.container}>
+
       <View style={styles.containerFilter}>
         <ScrollView contentContainerStyle={styles.scrollContent} horizontal>
-        <TouchableOpacity
-  style={[
-    styles.containerTextFilter,
-    activeOption === 'Limpiezaprofunda' && styles.activeOptionBtnFilter,
-  ]}
-  onPress={() => handleOptionClick('Limpiezaprofunda')}
->
-  <Text style={[styles.textFilter, activeOption === 'Limpiezaprofunda' && styles.activeOptionTxtBtnFilter]}>
-    Limpieza profunda
-  </Text>
-</TouchableOpacity>
-<TouchableOpacity
-  style={[
-    styles.containerTextFilter,
-    activeOption === 'Espacioscomerciales' && styles.activeOptionBtnFilter,
-  ]}
-  onPress={() => handleOptionClick('Espacioscomerciales')}
->
-  <Text style={[styles.textFilter, activeOption === 'Espacioscomerciales' && styles.activeOptionTxtBtnFilter]}>
-    Espacio comercial
-  </Text>
-</TouchableOpacity>
-<TouchableOpacity
-  style={[
-    styles.containerTextFilter,
-    activeOption === 'Organizacionyorden' && styles.activeOptionBtnFilter,
-  ]}
-  onPress={() => handleOptionClick('Organizacionyorden')}
->
-  <Text style={[styles.textFilter, activeOption === 'Organizacionyorden' && styles.activeOptionTxtBtnFilter]}>
-    Organización y orden
-  </Text>
-</TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.containerTextFilter,
+              filterOption === 'LimpiezaHogar' && styles.activeOptionBtnFilter,
+            ]}
+            onPress={() => handleFilterClick('Limpieza Hogar')}
+          >
+            <Text style={[styles.textFilter, filterOption === 'Limpieza Hogar' && styles.activeOptionTxtBtnFilter]}>
+              Limpieza hogar
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.containerTextFilter,
+              filterOption === 'Espacios comerciales' && styles.activeOptionBtnFilter,
+            ]}
+            onPress={() => handleFilterClick('Espacios comerciales')}
+          >
+            <Text style={[styles.textFilter, filterOption === 'Espacios comerciales' && styles.activeOptionTxtBtnFilter]}>
+              Espacio comercial
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.containerTextFilter,
+              filterOption === 'Organizacion y orden' && styles.activeOptionBtnFilter,
+            ]}
+            onPress={() => handleFilterClick('Organizacion y orden')}
+          >
+            <Text style={[styles.textFilter, filterOption === 'Organizacion y orden' && styles.activeOptionTxtBtnFilter]}>
+              Organización y orden
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
-      {activeOption === 'Limpiezaprofunda' && <PubLimpiezaprofunda />}
-      {activeOption === 'Espacioscomerciales' && <PubEspacioscomerciales />}
-      {activeOption === 'Organizacionyorden' && <PubOrganizacionyorden/>}
+      {filterOption === "Limpieza Hogar" && (
+        <PubLimpiezaHogar
+          publicaciones={publicaciones}
+          setFilterOption={setFilterOption}
+           openModal={openModal}
+           
 
-  </View>
+        />
+      )}
+      {filterOption === "Espacios comerciales" && (
+        <PubEspacioscomerciales 
+        publicaciones={publicaciones}
+        openModal={openModal}
+           
+        />
+
+      )}
+      {filterOption === "Organizacion y orden" && (
+        <PubOrganizacionyorden
+          publicaciones={publicaciones}
+          openModal={openModal}
+           
+
+
+        />
+      )}
+
+    </View>
   );
 }
 
@@ -70,14 +122,14 @@ const styles = StyleSheet.create({
   },
   containerFilter: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     height: 80,
     paddingBottom: 10,
     width: '100%',
   },
   containerTextFilter: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 8,
     backgroundColor: '#F5F5F5',
     borderRadius: 8,
@@ -95,6 +147,14 @@ const styles = StyleSheet.create({
   },
   textFilter: {
     textAlign: 'center',
+    color: '#707070'
+  },
+  scrollContent: {
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 80,
+    paddingBottom: 20,
   },
   scrollContent: {
     flexGrow: 1,

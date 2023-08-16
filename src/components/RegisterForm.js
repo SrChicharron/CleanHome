@@ -15,8 +15,8 @@ import { Picker } from "@react-native-picker/picker";
 import { format } from "date-fns";
 
 const options = [
-  { label: "Cliente", value: "cliente" },
-  { label: "Trabajador", value: "trabajador" },
+  { label: "Cliente", value: "ROLE_CLIENTE" },
+  { label: "Trabajador", value: "ROLE_EMPLEADO" },
 ];
 
 export default function RegisterForm() {
@@ -43,7 +43,7 @@ export default function RegisterForm() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleRegister = () => {
-    const urlRegister = "http://localhost:2813/ch/auth/register";
+    const urlRegister = "http://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/auth/register";
 
     const userData = {
       username: userName,
