@@ -12,7 +12,7 @@ import * as ImagePicker from "expo-image-picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { fetchEstados, fetchTipos } from "../api/propiedad/PropiedadesAPI";
-
+import useAuth from "../hooks/UseAuth";
 export default function PropiedadForm(props) {
   const { formData, handleChange, handleImagenes, handleComprobantes } = props;
 
@@ -20,6 +20,8 @@ export default function PropiedadForm(props) {
   const [ListaEstados, setListaEstados] = useState([]);
   const [image, setImage] = useState(null);
   const [imageComprobante, setImageComprobante] = useState(null);
+  const {auth} = useAuth()
+  const token=auth.token;
   const pickImage = async (option) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -44,10 +46,10 @@ export default function PropiedadForm(props) {
   };
 
   const loadData = async () => {
-    const resultEstados = await fetchEstados();
+    const resultEstados = await fetchEstados(token);
     //console.log(resultEstados);
     setListaEstados(resultEstados);
-    const resultTipos = await fetchTipos();
+    const resultTipos = await fetchTipos(token);
     //console.log(resultTipos);
     setListaTipoPropiedades(resultTipos);
   };

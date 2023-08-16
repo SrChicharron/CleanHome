@@ -19,6 +19,7 @@ import useAuth from "../../hooks/UseAuth";
 export default function Propiedades() {
   //useauth par obtener el id del cliente
   const {auth} = useAuth()
+  const token=auth.token;
   //usestate para guardar informacion
   const [activeOption, setActiveOption] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -178,7 +179,7 @@ export default function Propiedades() {
   //consulta las propiedades
   const loadData = async () => {
     const idCliente=auth.idUsuario;
-    const resultPropiedades = await fetchPropiedades(idCliente);
+    const resultPropiedades = await fetchPropiedades(idCliente, token);
     setPropiedades(resultPropiedades);
   };
   //para registrar
@@ -186,7 +187,7 @@ export default function Propiedades() {
     console.log(formData);
     console.log(imagenes);
     console.log(comprobantes);
-    const regProp=registrarPropiedad(formData,imagenes,comprobantes);
+    const regProp=registrarPropiedad(formData,imagenes,comprobantes, token);
     formatFormData();
     closeModal();
   }
@@ -211,7 +212,7 @@ export default function Propiedades() {
       idUsuario:propiedadEdicion.idUsuario
       });
     console.log(formData);
-    const deleteProp=deletePropiedad(formData)
+    const deleteProp=deletePropiedad(formData, token)
     formatFormData();
     closeModalOptions();
   }
