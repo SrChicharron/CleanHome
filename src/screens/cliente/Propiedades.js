@@ -6,59 +6,121 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SinSolicitudes from "../../components/SinSolicitudes";
+import ListPropiedades from "../../components/propiedad/ListPropiedades";
 import CardPropiedades from "../../components/CardPropiedades";
 import ModalAddPropiedad from "../../components/ModalAddPropiedad";
 import AccionesModal from "../../components/AccionesModal";
+import { fetchPropiedades, registrarPropiedad, deletePropiedad } from "../../api/propiedad/PropiedadesAPI";
+import useAuth from "../../hooks/UseAuth";
 
 export default function Propiedades() {
+  //useauth par obtener el id del cliente
+  const {auth} = useAuth()
+  //usestate para guardar informacion
   const [activeOption, setActiveOption] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPropiedad, setTitleModalPropiedad] = useState("");
-  const [formData, setFormData] = useState({
-    imagen: "",
-    idTipoPropiedad:"",
-    tipoPropiedad: "",
-    tituloCasa: "",
+  const [propiedades, setPropiedades] = useState([]);
+  const [propiedadEdicion, setPropiedadEdicion]=useState({
+    id:"",
+    titulo: "",
     calle: "",
-    numero: "",
+    numeroExt: "",
     codigoPostal: "",
     colonia: "",
-    idEstado:"",
-    estado: "",
     referencias: "",
-    comprobanteDomicilio: "",
-    estatus: "aprobado",
+    estatus: "pendiente",
+    estado:{
+      id:"",
+      estado:""},
+    tipoPropiedad:{
+      id:"",
+      tipo:""
+      },
+    idUsuario:auth.idUsuario
   });
+  //form para gardar la info y enviarla al back
+  const [formData, setFormData] = useState({
+    id:"",
+    titulo: "",
+    calle: "",
+    numeroExt: "",
+    codigoPostal: "",
+    colonia: "",
+    referencias: "",
+    estatus: "pendiente",
+    estado:{
+      id:"",
+      estado:""},
+    tipoPropiedad:{
+      id:"",
+      tipo:""
+      },
+    idUsuario:auth.idUsuario
+  });
+  const [comprobantes, setComprobantes] = useState([]);
+  const [imagenes, setImagenes] = useState([]);
 
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    console.log(formData);
+    if (name === "estado") {
+      setFormData(prevState => ({
+        ...prevState,
+        estado: {
+          ...prevState.estado,
+          id: value
+        }
+      }));
+    }else if(name === "tipoPropiedad"){
+      setFormData(prevState => ({
+        ...prevState,
+        tipoPropiedad: {
+          ...prevState.tipoPropiedad,
+          id: value
+        }
+      }));
+    } else {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
+    //console.log(formData);
   };
+
+  const handleImagenes = (nvaImagen) =>{
+    setImagenes(prevImagenes => [...prevImagenes, nvaImagen]);
+  }
+
+  const handleComprobantes = (nvoComprobante) =>{
+    setComprobantes(prevComprobantes => [...prevComprobantes, nvoComprobante]);
+  }
 
   const formatFormData = () => {
     setFormData({
-      imagen: "",
-      idTipoPropiedad:"",
-      tipoPropiedad: "",
-      tituloCasa: "",
+      id:"",
+      titulo: "",
       calle: "",
-      numero: "",
+      numeroExt: "",
       codigoPostal: "",
       colonia: "",
-      idEstado:"",
-      estado: "",
       referencias: "",
-      comprobanteDomicilio: "",
-      estatus: "",
-    });
+      estatus: "pendiente",
+      estado:{
+        id:"",
+        estado:""},
+      tipoPropiedad:{
+        id:"",
+        tipo:""
+        },
+      idUsuario:auth.idUsuario
+      });
+      setImagenes([]);
+      setComprobantes([]);
   };
 
   const openModal = (titleModal) => {
@@ -74,10 +136,28 @@ export default function Propiedades() {
   const handleOptionClick = (option) => {
     setActiveOption(option);
   };
-
+//cuando se abre el modal se envia la data de la propiedad al form
   const openModalOptions = () => {
     console.log("openModalOptions");
     setModalOptionVisible(true);
+    setFormData({
+      id:propiedadEdicion.id,
+      titulo: propiedadEdicion.titulo,
+      calle: propiedadEdicion.calle,
+      numeroExt: propiedadEdicion.numeroExt,
+      codigoPostal: propiedadEdicion.codigoPostal,
+      colonia: propiedadEdicion.colonia,
+      referencias: propiedadEdicion.referencias,
+      estatus: "pendiente",
+      estado:{
+        id:propiedadEdicion.estado.id,
+        estado:propiedadEdicion.estado.estado},
+      tipoPropiedad:{
+        id:propiedadEdicion.tipoPropiedad.id,
+        tipo:propiedadEdicion.tipoPropiedad.tipo
+        },
+      idUsuario:propiedadEdicion.idUsuario
+      });
   };
 
   const closeModalOptions = () => {
@@ -95,10 +175,53 @@ export default function Propiedades() {
     setModalOptionVisible(false);
     openModal("Agregar propiedad");
   };
-
+  //consulta las propiedades
+  const loadData = async () => {
+    const idCliente=auth.idUsuario;
+    const resultPropiedades = await fetchPropiedades(idCliente);
+    setPropiedades(resultPropiedades);
+  };
+  //para registrar
+  const handleRegister =() =>{
+    console.log(formData);
+    console.log(imagenes);
+    console.log(comprobantes);
+    const regProp=registrarPropiedad(formData,imagenes,comprobantes);
+    formatFormData();
+    closeModal();
+  }
+  //para eliminar
+  const handleDelete =() =>{
+    setFormData({
+      id:propiedadEdicion.id,
+      titulo: propiedadEdicion.titulo,
+      calle: propiedadEdicion.calle,
+      numeroExt: propiedadEdicion.numeroExt,
+      codigoPostal: propiedadEdicion.codigoPostal,
+      colonia: propiedadEdicion.colonia,
+      referencias: propiedadEdicion.referencias,
+      estatus: "pendiente",
+      estado:{
+        id:propiedadEdicion.estado.id,
+        estado:propiedadEdicion.estado.estado},
+      tipoPropiedad:{
+        id:propiedadEdicion.tipoPropiedad.id,
+        tipo:propiedadEdicion.tipoPropiedad.tipo
+        },
+      idUsuario:propiedadEdicion.idUsuario
+      });
+    console.log(formData);
+    const deleteProp=deletePropiedad(formData)
+    formatFormData();
+    closeModalOptions();
+  }
+  // Simulación de llamada a API para obtener los servicios
+  useEffect(() => {
+    loadData();
+  }, [formData]);
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {activeOption === false && (
+      {propiedades.length === 0 && (
         <SinSolicitudes
           mensajeTitulo="No tienes propiedades publicadas"
           mensajeDescripcion="Publica una propiedad para poder publicar un trabajo"
@@ -114,25 +237,23 @@ export default function Propiedades() {
           <Text style={styles.txtAdd}>Agregar</Text>
         </TouchableOpacity>
       </View>
-
-      <CardPropiedades
+      <ListPropiedades 
+        propiedades={propiedades}
+        propiedadEdicion={propiedadEdicion}
+        setPropiedadEdicion={setPropiedadEdicion}
         formData={formData}
-        onLongPress={openModalOptions}
+        openModalOptions={openModalOptions}
         setModalOptionVisible={setModalOptionVisible}
         closeModalOptions={closeModalOptions}
       />
-      <CardPropiedades
-        formData={formData}
-        onLongPress={openModalOptions}
-        setModalOptionVisible={setModalOptionVisible}
-        closeModalOptions={closeModalOptions}
-      />
-
       <ModalAddPropiedad
         modalVisible={modalVisible}
         closeModal={closeModal}
+        handleRegister={handleRegister}
         formData={formData}
         handleChange={handleChange}
+        handleImagenes={handleImagenes}
+        handleComprobantes={handleComprobantes}
         formatFormData={formatFormData}
         titleModal={titleModalPropiedad}
       />
@@ -144,7 +265,7 @@ export default function Propiedades() {
                 txtBtnBlue="Editar"
                 txtBtnRed="Eliminar"
                 onPressBlue={openModalPropiedad}
-                onPressRed={() => console.log("Eliminar")}
+                onPressRed={handleDelete}
       />
     </ScrollView>
   );

@@ -7,7 +7,7 @@ import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 import EditProfileForm from "./EditProfileForm";
 
 export default function ModalEditPerfil(props) {
-    const { modalVisible, closeModal, formData, handleChange } = props;
+    const { modalVisible, closeModal, userData, handleChange, editUsuario } = props;
     
     return (
         <Modal
@@ -30,14 +30,14 @@ export default function ModalEditPerfil(props) {
                     </TouchableOpacity>
                     <KeyboardAwareScrollView style={styles.bodyModal}>
                         {/* Formulario para crear una nueva publicación */}
-                        <EditProfileForm formData={formData} handleChange={handleChange} />
+                        <EditProfileForm userData={userData} handleChange={handleChange} />
                     </KeyboardAwareScrollView>
                     <View style={styles.footerModal}>
                         {/* Botones para publicar y cancelar */}
                         <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
                             <Text style={styles.txtBtn}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }}>
+                        <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={editUsuario}>
                             <Text style={styles.txtBtn}>Editar</Text>
                         </TouchableOpacity>
                     </View>
