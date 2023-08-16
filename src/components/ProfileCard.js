@@ -7,38 +7,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 
 export default function ProfileCard( props ) {
-    const { formData, handleChange, auth, infoUser } = props; 
-    const [image, setImage] = useState(null);
-    
-    const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-    
-        console.log(result);
-    
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            handleChange("urlImgProfile", result.assets[0].uri);
-        }
-      };
+    const { userData } = props; 
 
   return (
-    
     <View style={styles.container}>
-        <TouchableOpacity 
-            style={styles.containerImage} 
-            onPress={() => pickImage()}
-        >
-            <Image style={styles.profileImg}/>
+        <View style={styles.containerImage}>
+            <Image source={{uri: userData.foto}} style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
-        </TouchableOpacity>
-        <Text style={styles.txtName}>{infoUser?infoUser.name:''} {infoUser?infoUser.lastname:''}</Text>
-        <Text style={styles.txtRol}>{auth.rol}</Text>
+        </View>
+        <Text style={styles.txtName}>{userData.name} {userData.lastname}</Text>
+        <Text style={styles.txtRol}>{userData.username}</Text>
     </View>
   )
 }

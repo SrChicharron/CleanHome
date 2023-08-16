@@ -5,17 +5,22 @@ import { faUser, faEnvelope, } from "@fortawesome/free-regular-svg-icons";
 import { faMobileScreen } from "@fortawesome/free-solid-svg-icons";
 import CakeIcon from "../../assets/icons/CakeIcon.svg";
 import ResenaCard from "../ResenaCard";
+import useAuth from "../../hooks/UseAuth";
+import {format} from 'date-fns';
 
 export default function DataProfile( props ) {
-    const { formData, titleResenias, auth, infoUser } = props;
+    const { userData, titleResenias } = props;
+    const { auth } = useAuth();
+
+    const birthday = format(new Date(userData.birthday), 'dd/MM/yyyy');
 
   return (
     <View>
       <Text style={styles.titleInfo}>Información personal</Text>
-      <Text style={styles.txtDescripcion}>{infoUser?infoUser.descripcion:'Escribe una breve descripcion en `Editar`'}</Text>
+      <Text style={styles.txtDescripcion}>{userData.descripcion}</Text>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faUser} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{infoUser?infoUser.name:''}{infoUser?infoUser.lastname:''}</Text>
+        <Text style={styles.txtLabels}>{userData.name} {userData.lastname}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faEnvelope} style={styles.icons} size={24} />
@@ -23,11 +28,11 @@ export default function DataProfile( props ) {
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faMobileScreen} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{infoUser?infoUser.cellphone:''}</Text>
+        <Text style={styles.txtLabels}>{userData.cellphone}</Text>
       </View>
       <View style={styles.containerInfo}>
         <CakeIcon style={styles.icons} />
-        <Text style={styles.txtLabels}>{infoUser?infoUser.birthday:''}</Text>
+        <Text style={styles.txtLabels}>{birthday}</Text>
       </View>
       <Text style={styles.titleResenias}>{titleResenias}</Text>
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
