@@ -51,11 +51,11 @@ export default function PublicacionesAceptadas( { publicaciones } ) {
     });
   }
 
-  const openModal = () => {
+  const openModalResenia = () => {
     setModalVisible(true);
   }
 
-  const closeModal = () => {
+  const closeModalResenia = () => {
     setModalVisible(false);
     formatReseniaData();
   }
@@ -73,16 +73,15 @@ export default function PublicacionesAceptadas( { publicaciones } ) {
 
         <PublicacionesList 
           publicaciones={publicacionesActivas} 
-          onLongPress={openModal}
-          setModalOptionVisible={setModalVisible}
-          closeModalOptions={closeModal}
+          openModalResenia={openModalResenia}
+          closeModalOptions={closeModalResenia}
         />
 
 
       <ModalResenia
         modalVisible={modalVisible}
-        closeModal={closeModal}
-        publicaciones={publicaciones}
+        closeModal={closeModalResenia}
+        publicaciones={publicacionesActivas}
         handleChange={handleChange}
       />
     </View>
