@@ -1,34 +1,28 @@
 import {
     View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    TouchableOpacity,
-    Modal,
+    StyleSheet
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import SinSolicitudes from "../../../components/SinSolicitudes";
-import CardPostulaciones from "../../../components/trabajador/CardPostulaciones";
+import PostulacionesList from "../../../components/trabajador/PostulacionesList";
 
-export default function Finalizados() {
+export default function Finalizados( { postulaciones } ) {
     const navigation = useNavigation();
-    const [activeOption, setActiveOption] = useState(true);
-    const [modalVisible, setModalVisible] = useState(false);
-    const [formData, setFormData] = useState({
-        direccion: "Torres Bases, Querétaro, Qro.",
-        propietario: "Carlos Ricardo Espinoza Pliego",
-        descripcion: "Limpieza general, se tiene que limpiar 3 cuartos y sala y comedor y tambie limpiar bien",
-        sueldo: "350 MXN",
-        fechaPublicacion: "Hoy",
-        phoneNumber: '7772673669',
-        calificacion: "",
-        resenia: "",
-    });
+    const [postulacionesFinalizadas, setPostulacionesFinalizadas] = useState([]);
+
+    useEffect(() => {
+        setPostulacionesFinalizadas(filterPostulacionesFinalizadas());
+    }, [postulaciones])
+
+    // FUNCIÓN PARA FILTRAR LAS POSTULACIONES FINALIZADAS
+    const filterPostulacionesFinalizadas = () => {
+        return postulaciones.filter(postulacion => postulacion.estatus === 'finalizados');
+    }
 
     return (
-        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-            {activeOption === false && (
+        <View style={styles.container} >
+            {!postulacionesFinalizadas || postulacionesFinalizadas.length === 0 && (
                 <SinSolicitudes
                     mensajeTitulo='No tienes trabajos terminados'
                     mensajeDescripcion='Espera a que un empleador de por finalizado tu trabajo. Mientras, puedes seguir buscando'
@@ -36,13 +30,11 @@ export default function Finalizados() {
                     onPressBtn={() => navigation.navigate("HomeTrabajador")}
                 />
             )}
-            <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} />
-            <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} />
-            <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} />
-            <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} />
-            <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} />
-            <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} />
-        </ScrollView>
+            {/* <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} /> */}
+
+            <PostulacionesList postulaciones={postulacionesFinalizadas} activeOpacity={1} />
+
+        </View>
     )
 }
 
