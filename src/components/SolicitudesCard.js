@@ -1,24 +1,63 @@
 import { View, Text, StyleSheet, Image, TouchableWithoutFeedback } from 'react-native'
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import ProfileImg from '../assets/images/welcome1.jpg'
 import { AntDesign } from '@expo/vector-icons'
+import axios from 'axios'
 import AccionesSolicitudes from './AccionesSolicitudes'
 import StarRating from "react-native-star-rating-widget";
+import useAuth from '../hooks/UseAuth';
 
-export default function SolicitudesCard() {
-
+export default function SolicitudesCard(props) {
+  const {auth,logout} = useAuth()
+    const token=auth.token;
+    const {solicitudes} = props
     const [isModalVisible, setModalVisible] = useState(false);
+    let idEmpleado = solicitudes.empleado.id;
     // Variables de prueba para que funcione el componente de status y estrellas -----
-    const [estatus, setEstatus] = useState('finalizado');
-    const [calificacion, setCalificacion] = useState(4.5);
+    const [estatus, setEstatus] = useState();
+    const [data,setData]=useState()
+    const [calificacion, setCalificacion] = useState([]);
     // ----- fin de variables de prueba -----//
+    let id=solicitudes.id;
+    const name = `${solicitudes.empleado.name} ${solicitudes.empleado.lastname}`;
   
     const toggleModal = () => {
       setModalVisible(!isModalVisible);
+      console.log(id)
     };
 
+    const getEstresllasTrabajador= async () => {
+      const urlGetEstrellas=`http://clenhometm.trafficmanager.net:2813/ch/resena/getResenasEvaluado?idEvaluado=${idEmpleado}`
+      try{
+        const response = await axios.get(urlGetEstrellas,
+          {
+            headers: {
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Headers":
+                "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+              "Content-Type": "application/json",
+              'Authorization':`Bearer ${token}`
+            }
+          })
+        // const response = await axios.get(urlGetSolicitudes,{
+        //   params:{idCliente:9},
+        //   headers:{
+        //     'Authorization':`Bearer ${token}`
+        //   }
+        // });
+        setData(response.data)
+        setCalificacion(data.map(x => x.calificacion))
+      }catch(error){
+          console.log(error)
+      }
+    };
+
+    useEffect(() => {
+      getEstresllasTrabajador();
+    });
+
   return (
-    <View>
+    <>
     <TouchableWithoutFeedback onLongPress={toggleModal}>
     
     <View style={styles.containerCard}>
@@ -34,7 +73,7 @@ export default function SolicitudesCard() {
                 backgroundColor:
                 estatus === "aprobado"
                     ? "#D4F4E2"
-                    : estatus === "finalizado"
+                    : estatus === `finalizado`
                     ? "#075493"
                     : "#E6E6E6",
               },
@@ -44,37 +83,37 @@ export default function SolicitudesCard() {
               styles.txtIsApproved,
               {
                 color:
-                estatus === "finalizado"
+                estatus === `finalizado`
                     ? "#fff"
                     : "#000",
               },
-            ]}>{estatus}</Text>
+            ]}>{solicitudes.estatus}</Text>
           </View>
         </View>
 
         <View style={styles.containerInfo}>
-            <Text style={styles.textNombre}>Nombre Trabajador</Text>
-            <Text style={styles.textRol}>Rol</Text>
+            <Text style={styles.textNombre}>{solicitudes.empleado.name} {solicitudes.empleado.lastname}</Text>
+            <Text style={styles.textRol}>Celular: {solicitudes.empleado.cellphone}</Text>
 
             <View style={styles.viewStars}>
-                <StarRating rating={calificacion} /*onChange={(rating) => handleChange("calificacion", rating)}*/ starSize={30} style={styles.starRating}/>
+                <StarRating rating={calificacion[0]} /*onChange={(rating) => handleChange("calificacion", rating)}*/ starSize={30} style={styles.starRating}/>
             </View>
 
-            <Text style={styles.textDescripcion}>Moises se postuló para casa centro ubicado en Mariano escobedo #68 Col. Centro 68001, Qro Qro.</Text>
+            <Text style={styles.textDescripcion}>{solicitudes.empleado.name} se postuló para <Text style={{fontWeight:'bold'}}>{solicitudes.propiedad.titulo}</Text> ubicado en {solicitudes.propiedad.calle} #{solicitudes.propiedad.numeroExt} Col. {solicitudes.propiedad.colonia} {solicitudes.propiedad.codigoPostal}, {solicitudes.propiedad.estado.estado}</Text>
         </View>
 
       </View>
     </View>
         
     </TouchableWithoutFeedback>
-    <AccionesSolicitudes isModalVisible={isModalVisible} toggleModal={toggleModal}/>
-    </View>
+    <AccionesSolicitudes isModalVisible={isModalVisible} toggleModal={toggleModal} id={id} name={name}/>
+    </>
   )
 }
 
 const styles = StyleSheet.create({
     containerCard:{
-        height:200,
+        
         backgroundColor:'#FFF',
         margin: 8,
         padding: 16,
@@ -116,7 +155,7 @@ const styles = StyleSheet.create({
         textAlign:'left'
     },
     viewStars:{
-        paddingVertical: 4,
+
       },
     textDescripcion:{
         fontSize:14,

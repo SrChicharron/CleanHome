@@ -1,13 +1,57 @@
-import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Alert, Button } from "react-native";
+
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 import EditProfileForm from "./EditProfileForm";
+import axios from "axios";
+import Toast from 'react-native-toast-message'
 
 export default function ModalEditPerfil(props) {
-    const { modalVisible, closeModal, userData, handleChange, editUsuario } = props;
+    const { modalVisible, closeModal, formData, handleChange, auth, infoUser } = props;
+    const token=auth.token;
+    const showToastSucces = () =>{
+        Toast.show({
+            type:"success",
+            text1:'Informacion actualizada!',
+            text2:'Tu informacion se ha actualizado correctamente'
+        })
+    }
+
+    const showToastError = () =>{
+        Toast.show({
+            type:"error",
+            text1:'Error!',
+            text2:'Ocurrio un problema al actualizar tu informacion'
+        })
+    }
+    
+    const actualizarInfo = () => {
+        const urlupdateInfo=`http://clenhometm.trafficmanager.net:2813/ch/auth/editarInfoUser/${auth.username}`
+        axios({
+          method: "PUT",
+          url: urlupdateInfo,
+          data: JSON.stringify(formData),
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers":
+              "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+            "Content-Type": "application/json",
+            'Authorization':`Bearer ${token}`
+          },
+        }).then(response => {
+            if(response.status==200){
+                closeModal();
+                showToastSucces()
+            }
+          
+        }).catch(error => {
+            showToastError()
+          console.log(error);
+        })
+      };
     
     return (
         <Modal
@@ -44,6 +88,7 @@ export default function ModalEditPerfil(props) {
 
                 </View>
             </View>
+            
         </Modal>
     )
 }

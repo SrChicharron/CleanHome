@@ -7,34 +7,40 @@ import {
 import React, { useState, useEffect } from "react";
 
 export default function EditProfileForm(props) {
-  const { userData, handleChange } = props;
+    const { formData, handleChange } = props;
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Nombre</Text>
-      <TextInput
-        style={styles.input}
-        value={userData.name}
-        onChangeText={(text) => handleChange("name", text)}
-      />
-      <Text style={styles.label}>Número de celular</Text>
-      <TextInput
-        style={styles.input}
-        value={userData.cellphone}
-        keyboardType="numeric"
-        maxLength={10}
-        onChangeText={(text) => handleChange("cellphone", text)}
-      />
-      <Text style={styles.label}>Descripción</Text>
-      <TextInput
-        style={{ ...styles.input, ...styles.labelDescripcion }}
-        placeholder="Descripción"
-        multiline
-        value={userData.descripcion}
-        onChangeText={(text) => handleChange("descripcion", text)}
-      />
-    </View>
-  );
+    return (
+        <View style={styles.container}>
+            <Text style={styles.label}>Nombre</Text>
+            <TextInput
+                style={styles.input}
+                value={formData.name}
+                onChangeText={(text) => handleChange("name", text)}
+            />
+            <Text style={styles.label}>Apellidos</Text>
+            <TextInput
+                style={styles.input}
+                value={formData.lastname}
+                onChangeText={(text) => handleChange("lastname", text)}
+            />
+            <Text style={styles.label}>Número de celular</Text>
+            <TextInput
+                style={styles.input}
+                value={formData.cellphone}
+                keyboardType="numeric"
+                maxLength={10}
+                onChangeText={(text) => handleChange("cellphone", text)}
+            />
+            <Text style={styles.label}>Descripción</Text>
+            <TextInput
+                style={{ ...styles.input, ...styles.labelDescripcion }}
+                placeholder="Descripción"
+                multiline
+                value={formData.descripcion}
+                onChangeText={(text) => handleChange("descripcion", text)}
+            />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

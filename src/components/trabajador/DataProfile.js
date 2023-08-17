@@ -20,7 +20,7 @@ export default function DataProfile( props ) {
       <Text style={styles.txtDescripcion}>{userData.descripcion}</Text>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faUser} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{userData.name} {userData.lastname}</Text>
+        <Text style={styles.txtLabels}>{infoUser?infoUser.name:''} {infoUser?infoUser.lastname:''}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faEnvelope} style={styles.icons} size={24} />
