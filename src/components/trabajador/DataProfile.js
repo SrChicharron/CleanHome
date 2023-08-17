@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faUser, faEnvelope, } from "@fortawesome/free-regular-svg-icons";
 import { faMobileScreen } from "@fortawesome/free-solid-svg-icons";
 import CakeIcon from "../../assets/icons/CakeIcon.svg";
-import ResenaCard from "../ResenaCard";
 
 export default function DataProfile( props ) {
     const { formData, titleResenias, auth, infoUser } = props;
@@ -15,7 +14,7 @@ export default function DataProfile( props ) {
       <Text style={styles.txtDescripcion}>{infoUser?infoUser.descripcion:'Escribe una breve descripcion en `Editar`'}</Text>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faUser} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{infoUser?infoUser.name:''}{infoUser?infoUser.lastname:''}</Text>
+        <Text style={styles.txtLabels}>{infoUser?infoUser.name:''} {infoUser?infoUser.lastname:''}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faEnvelope} style={styles.icons} size={24} />
@@ -29,12 +28,6 @@ export default function DataProfile( props ) {
         <CakeIcon style={styles.icons} />
         <Text style={styles.txtLabels}>{infoUser?infoUser.birthday:''}</Text>
       </View>
-      <Text style={styles.titleResenias}>{titleResenias}</Text>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ResenaCard/>
-            <ResenaCard/>
-            <ResenaCard/>
-      </ScrollView>
     </View>
   )
 }
@@ -56,7 +49,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         borderBottomColor: "#DEDEDE",
         borderBottomWidth: 1,
-        paddingBottom: 8,
+        paddingBottom: 16,
     },
     icons: {
         color: "#aaaaaa",

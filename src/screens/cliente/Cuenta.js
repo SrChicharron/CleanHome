@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ToastAndroid } from 'react-native'
 import React, {useState, useEffect, useCallback} from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import {FontAwesome, Foundation} from '@expo/vector-icons'
@@ -11,12 +11,16 @@ import DataProfile from '../../components/trabajador/DataProfile'
 import useAuth from '../../hooks/UseAuth';
 import axios from 'axios'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
-
+import  Toast  from 'react-native-toast-message'
 export default function Cuenta() {
-  const {auth} = useAuth()
+  const showToast = () => {
+    Toast.show();
+  }
+  const {auth,logout} = useAuth()
+  const token=auth.token;
   const [modalVisible, setModalVisible] = useState(false);
   const [infoUser,setInfoUser] = useState(null);
-  const urlgetInfo =`http://192.168.1.154:2813/ch/auth/getUsuario/${auth.username}`
+  const urlgetInfo =`http://clenhometm.trafficmanager.net:2813/ch/auth/getUsuario/${auth.username}`
   const [formData, setFormData] = useState({
     name: "",
     lastname: "",
@@ -61,7 +65,17 @@ export default function Cuenta() {
 
   const getInfoUsuario= async () => {
     try{
-      const response = await axios.get(urlgetInfo);
+      //const response = await axios.get(urlgetInfo);
+      const response = await axios.get(urlgetInfo,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers":
+              "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+            "Content-Type": "application/json",
+            'Authorization':`Bearer ${token}`
+          }
+        });
       setInfoUser(response.data);
     }catch(error){
         console.log(error)
@@ -82,11 +96,17 @@ export default function Cuenta() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.containerLinkAdd}>
-        <TouchableOpacity
+      <TouchableOpacity
           style={styles.containerBtnLinkAdd}
           onPress={openModal}
         >
           <Text style={styles.txtAdd}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.containerBtnLinkAdd}
+          onPress={logout}
+        >
+          <Text style={styles.txtAdd}>Cerrar sesión</Text>
         </TouchableOpacity>
       </View>
       <ProfileCard 
@@ -106,6 +126,7 @@ export default function Cuenta() {
         infoUser={infoUser}
         auth={auth}
       />
+      <Toast topOffset={20}/>
     </ScrollView>
   )
 }
@@ -117,7 +138,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   containerLinkAdd: {
-    alignItems: "flex-end",
+    flexDirection:'row-reverse',
+    justifyContent:"space-between"
   },
   containerBtnLinkAdd: {
     borderRadius: 8,
