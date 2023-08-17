@@ -28,7 +28,7 @@ export default function Pendientes( { postulaciones } ) {
                     mensajeTitulo='No tienes postulaciones... ¡por ahora!'
                     mensajeDescripcion='Busca y elije el mejor trabajo para tí'
                     txtBtn="Empezar a buscar"
-                    onPressBtn={() => navigation.navigate("HomeTrabajador")}
+                    onPressBtn={() => navigation.navigate("Publicaciones")}
                 />
             )}
             {/* <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} /> */}

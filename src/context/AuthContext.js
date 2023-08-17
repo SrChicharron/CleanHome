@@ -10,8 +10,8 @@ export function AuthProvider(props) {
   const [auth, setAuth] = useState(undefined)
 
   const login = (loginData) => {
-    const urlLogin = 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/auth/signin'
-    //const urlLogin = 'http://192.168.0.109:2813/ch/auth/signin'
+    const urlLogin = 'http://clenhometm.trafficmanager.net:2813/ch/auth/signin'
+
     axios({
       method: "POST",
       url: urlLogin,

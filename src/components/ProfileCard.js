@@ -1,10 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from "react";
-import ProfileImg from '../assets/images/ImgProfile.png'
 import VerificateIcon from '../assets/icons/VerificateIcon.svg'
-import * as ImagePicker from "expo-image-picker";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
+import AvatarH from "../assets/images/AvatarH.png";
 
 export default function ProfileCard( props ) {
     const { userData } = props; 
@@ -12,7 +9,7 @@ export default function ProfileCard( props ) {
   return (
     <View style={styles.container}>
         <View style={styles.containerImage}>
-            <Image source={{uri: userData.foto}} style={styles.profileImg}/>
+            <Image source={AvatarH} style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
         </View>
         <Text style={styles.txtName}>{userData.name} {userData.lastname}</Text>
@@ -31,7 +28,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         width: '99%',
-        height: 250,
+        height: 270,
         elevation: 5, // Esto agregará la sombra en Android
         shadowColor: '#000', // Esto agregará la sombra en iOS
         shadowOffset: {
@@ -42,19 +39,16 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
     },
     profileImg: {
-        width: 150,
-        height: 150,
-        borderRadius: 100,
-        marginBottom: 16,
+        width: 154,
+        height: 180,
     },
     containerImage: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#F5F5F5',
-        borderRadius: 100,
         width: 150,
-        height: 150,
+        height: 170,
+        marginVertical: 14,
     },
     iconVerif: {
         position: 'absolute',
