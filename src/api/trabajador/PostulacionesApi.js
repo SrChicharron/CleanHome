@@ -20,6 +20,23 @@ export const getPublicaciones = async (token) => {
   }
 }
 
+//FUNCIÓN PARA UPDATE PUBLICACION
+export const updatePublicacion = async (publicacion, token) => {
+  console.log("publicacion en api: " + JSON.stringify(publicacion, null, 4))
+
+  try {
+    const response = await axios.post(`${API_URL_PUBLICACION}/updatePublicacion`, publicacion, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export const getPostulaciones = async (id, token) => {
   try {
     const response = await axios.get(`${API_URL}/getPostulacionesEmpleado?idEmpleado=${id}`, {
@@ -36,6 +53,7 @@ export const getPostulaciones = async (id, token) => {
 
 // FUNCIÓN PARA ACTUALIZAR POSTULACIÓN
 export const updatePostulacion = async (postulacion, token) => {
+console.log("postulacion en api: " + JSON.stringify(postulacion, null, 4))
   try {
     const response = await axios.post(`${API_URL}/updatePostulacion`, postulacion, {
       headers: {
@@ -51,6 +69,7 @@ export const updatePostulacion = async (postulacion, token) => {
 
 // FUNCIÓN PARA AÑADIR UNA RESEÑA
 export const addResena = async (resena, token) => {
+  console.log("resena en api: " + JSON.stringify(resena, null, 4))
   try {
     const response = await axios.post(`${API_URL_RESENA}/addResena`, resena, {
       headers: {

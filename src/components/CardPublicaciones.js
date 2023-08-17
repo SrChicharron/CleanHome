@@ -25,7 +25,7 @@ export default function CardPublicaciones( props ) {
 
     const onLongPress = () => {
         if (publicacion.estatus === 'aceptados') {
-            openModalResenia();
+            openModalResenia(publicacion);
         } else if (publicacion.estatus === 'activo') {
             openModalOptions(publicacion);
         } else {

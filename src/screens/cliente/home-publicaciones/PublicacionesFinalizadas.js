@@ -9,7 +9,6 @@ import SinSolicitudes from "../../../components/SinSolicitudes";
 import PublicacionesList from "../../../components/cliente/PublicacionesList";
 
 export default function PublicacionesFinalizadas({ publicaciones, setActiveOption }) {
-  console.log("Desde publicaciones activa ---> ")
 
   // FUNCIÓN PARA FILTRAR LAS PUBLICACIONES ACTIVAS
   const filtrarPublicacionesActivas = () => {

@@ -4,18 +4,18 @@ import StarRating from "react-native-star-rating-widget";
 import ProfileCard from "./ProfileCard";
 
 export default function ReseniaForm(props) {
-  const { formData, handleChange } = props;
+  const { formData, handleChange, reseniaData } = props;
 
   return (
     <View style={styles.container}>
-      <ProfileCard />
-      <StarRating rating={formData.calificacion} onChange={(rating) => handleChange("calificacion", rating)} starSize={54} style={styles.starRating}/>
+      <ProfileCard formData={formData}/>
+      <StarRating rating={reseniaData.calificacion} onChange={(rating) => handleChange("calificacion", rating)} starSize={54} style={styles.starRating}/>
       <TextInput
         style={{ ...styles.input, ...styles.labelDescripcion }}
         placeholder="Escribe una reseña del trabajador (opcional)"
         multiline
-        value={formData.resenia}
-        onChangeText={(resenia) => handleChange("resenia", resenia)}
+        value={reseniaData.resenia}
+        onChangeText={(resenia) => handleChange("comentarios", resenia)}
       />
     </View>
   );

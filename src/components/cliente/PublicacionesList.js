@@ -9,7 +9,7 @@ export default function PublicacionesList( props ) {
     <PublicacionCard
       publicacion={item}
       openModalOptions={(publicacion) => openModalOptions(publicacion)}
-      openModalResenia={openModalResenia}
+      openModalResenia={(publicacion) => openModalResenia(publicacion)}
     />
   );
 

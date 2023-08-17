@@ -13,21 +13,26 @@ import ListPropiedades from "../../components/propiedad/ListPropiedades";
 import CardPropiedades from "../../components/CardPropiedades";
 import ModalAddPropiedad from "../../components/ModalAddPropiedad";
 import AccionesModal from "../../components/AccionesModal";
-import { fetchPropiedades, registrarPropiedad, deletePropiedad } from "../../api/propiedad/PropiedadesAPI";
+import {
+  fetchPropiedades,
+  registrarPropiedad,
+  deletePropiedad,
+} from "../../api/propiedad/PropiedadesAPI";
 import useAuth from "../../hooks/UseAuth";
+import Toast from 'react-native-toast-message';
 
 export default function Propiedades() {
   //useauth par obtener el id del cliente
-  const {auth} = useAuth()
-  const token=auth.token;
+  const { auth } = useAuth();
+  const token = auth.token;
   //usestate para guardar informacion
   const [activeOption, setActiveOption] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPropiedad, setTitleModalPropiedad] = useState("");
   const [propiedades, setPropiedades] = useState([]);
-  const [propiedadEdicion, setPropiedadEdicion]=useState({
-    id:"",
+  const [propiedadEdicion, setPropiedadEdicion] = useState({
+    id: "",
     titulo: "",
     calle: "",
     numeroExt: "",
@@ -35,18 +40,19 @@ export default function Propiedades() {
     colonia: "",
     referencias: "",
     estatus: "pendiente",
-    estado:{
-      id:"",
-      estado:""},
-    tipoPropiedad:{
-      id:"",
-      tipo:""
-      },
-    idUsuario:auth.idUsuario
+    estado: {
+      id: "",
+      estado: "",
+    },
+    tipoPropiedad: {
+      id: "",
+      tipo: "",
+    },
+    idUsuario: auth.idUsuario,
   });
   //form para gardar la info y enviarla al back
   const [formData, setFormData] = useState({
-    id:"",
+    id: "",
     titulo: "",
     calle: "",
     numeroExt: "",
@@ -54,14 +60,15 @@ export default function Propiedades() {
     colonia: "",
     referencias: "",
     estatus: "pendiente",
-    estado:{
-      id:"",
-      estado:""},
-    tipoPropiedad:{
-      id:"",
-      tipo:""
-      },
-    idUsuario:auth.idUsuario
+    estado: {
+      id: "",
+      estado: "",
+    },
+    tipoPropiedad: {
+      id: "",
+      tipo: "",
+    },
+    idUsuario: auth.idUsuario,
   });
   const [comprobantes, setComprobantes] = useState([]);
   const [imagenes, setImagenes] = useState([]);
@@ -69,41 +76,65 @@ export default function Propiedades() {
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
     if (name === "estado") {
-      setFormData(prevState => ({
+      setFormData((prevState) => ({
         ...prevState,
         estado: {
           ...prevState.estado,
-          id: value
-        }
+          id: value,
+        },
       }));
-    }else if(name === "tipoPropiedad"){
-      setFormData(prevState => ({
+    } else if (name === "tipoPropiedad") {
+      setFormData((prevState) => ({
         ...prevState,
         tipoPropiedad: {
           ...prevState.tipoPropiedad,
-          id: value
-        }
+          id: value,
+        },
       }));
     } else {
-      setFormData(prevState => ({
+      setFormData((prevState) => ({
         ...prevState,
-        [name]: value
+        [name]: value,
       }));
     }
     //console.log(formData);
   };
 
-  const handleImagenes = (nvaImagen) =>{
-    setImagenes(prevImagenes => [...prevImagenes, nvaImagen]);
+  // Simulación de llamada a API para obtener los servicios
+  useEffect(() => {
+    loadData();
+  }, [formData, propiedades]);
+
+  const showToastSuccess = (title, message) => {
+    Toast.show({
+      type: 'success',
+      text1: `${title}`,
+      text2: `${message} 🥳`
+    });
   }
 
-  const handleComprobantes = (nvoComprobante) =>{
-    setComprobantes(prevComprobantes => [...prevComprobantes, nvoComprobante]);
+  const showToastError = (title, message) => {
+    Toast.show({
+      type: 'error',
+      text1: `${title}`,
+      text2: `${message} 😥`
+    });
   }
+
+  const handleImagenes = (nvaImagen) => {
+    setImagenes((prevImagenes) => [...prevImagenes, nvaImagen]);
+  };
+
+  const handleComprobantes = (nvoComprobante) => {
+    setComprobantes((prevComprobantes) => [
+      ...prevComprobantes,
+      nvoComprobante,
+    ]);
+  };
 
   const formatFormData = () => {
     setFormData({
-      id:"",
+      id: "",
       titulo: "",
       calle: "",
       numeroExt: "",
@@ -111,17 +142,18 @@ export default function Propiedades() {
       colonia: "",
       referencias: "",
       estatus: "pendiente",
-      estado:{
-        id:"",
-        estado:""},
-      tipoPropiedad:{
-        id:"",
-        tipo:""
-        },
-      idUsuario:auth.idUsuario
-      });
-      setImagenes([]);
-      setComprobantes([]);
+      estado: {
+        id: "",
+        estado: "",
+      },
+      tipoPropiedad: {
+        id: "",
+        tipo: "",
+      },
+      idUsuario: auth.idUsuario,
+    });
+    setImagenes([]);
+    setComprobantes([]);
   };
 
   const openModal = (titleModal) => {
@@ -137,12 +169,12 @@ export default function Propiedades() {
   const handleOptionClick = (option) => {
     setActiveOption(option);
   };
-//cuando se abre el modal se envia la data de la propiedad al form
+  //cuando se abre el modal se envia la data de la propiedad al form
   const openModalOptions = () => {
     console.log("openModalOptions");
     setModalOptionVisible(true);
     setFormData({
-      id:propiedadEdicion.id,
+      id: propiedadEdicion.id,
       titulo: propiedadEdicion.titulo,
       calle: propiedadEdicion.calle,
       numeroExt: propiedadEdicion.numeroExt,
@@ -150,26 +182,27 @@ export default function Propiedades() {
       colonia: propiedadEdicion.colonia,
       referencias: propiedadEdicion.referencias,
       estatus: "pendiente",
-      estado:{
-        id:propiedadEdicion.estado.id,
-        estado:propiedadEdicion.estado.estado},
-      tipoPropiedad:{
-        id:propiedadEdicion.tipoPropiedad.id,
-        tipo:propiedadEdicion.tipoPropiedad.tipo
-        },
-      idUsuario:propiedadEdicion.idUsuario
-      });
+      estado: {
+        id: propiedadEdicion.estado.id,
+        estado: propiedadEdicion.estado.estado,
+      },
+      tipoPropiedad: {
+        id: propiedadEdicion.tipoPropiedad.id,
+        tipo: propiedadEdicion.tipoPropiedad.tipo,
+      },
+      idUsuario: propiedadEdicion.idUsuario,
+    });
   };
 
   const closeModalOptions = () => {
     setModalOptionVisible(false);
   };
-  
+
   const openModalPropiedad = () => {
-    console.log("openModalPropiedad")
+    console.log("openModalPropiedad");
     setModalOptionVisible(false);
     openModal("Editar propiedad");
-  }
+  };
 
   const openModalPropiedadAdd = () => {
     console.log("openModalPropiedadAdd");
@@ -178,23 +211,29 @@ export default function Propiedades() {
   };
   //consulta las propiedades
   const loadData = async () => {
-    const idCliente=auth.idUsuario;
+    const idCliente = auth.idUsuario;
     const resultPropiedades = await fetchPropiedades(idCliente, token);
-    setPropiedades(resultPropiedades);
+    setPropiedades(resultPropiedades.reverse());
   };
   //para registrar
-  const handleRegister =() =>{
-    console.log(formData);
-    console.log(imagenes);
-    console.log(comprobantes);
-    const regProp=registrarPropiedad(formData,imagenes,comprobantes, token);
+  const handleRegister = () => {
+    // console.log(formData);
+    // console.log(imagenes);
+    // console.log(comprobantes);
+    const regProp = registrarPropiedad(formData, imagenes, comprobantes, token);
+    // HACER LA VALIDACIÓN PARA MOSTRAR EL TOAST
+    if (regProp) {
+      showToastSuccess('Propiedad registrada', 'La propiedad se registró correctamente');
+    } else {
+      showToastError('Propiedad no registrada', 'La propiedad no se pudo registrar');
+    }
     formatFormData();
     closeModal();
-  }
+  };
   //para eliminar
-  const handleDelete =() =>{
+  const handleDelete = () => {
     setFormData({
-      id:propiedadEdicion.id,
+      id: propiedadEdicion.id,
       titulo: propiedadEdicion.titulo,
       calle: propiedadEdicion.calle,
       numeroExt: propiedadEdicion.numeroExt,
@@ -202,25 +241,30 @@ export default function Propiedades() {
       colonia: propiedadEdicion.colonia,
       referencias: propiedadEdicion.referencias,
       estatus: "pendiente",
-      estado:{
-        id:propiedadEdicion.estado.id,
-        estado:propiedadEdicion.estado.estado},
-      tipoPropiedad:{
-        id:propiedadEdicion.tipoPropiedad.id,
-        tipo:propiedadEdicion.tipoPropiedad.tipo
-        },
-      idUsuario:propiedadEdicion.idUsuario
-      });
+      estado: {
+        id: propiedadEdicion.estado.id,
+        estado: propiedadEdicion.estado.estado,
+      },
+      tipoPropiedad: {
+        id: propiedadEdicion.tipoPropiedad.id,
+        tipo: propiedadEdicion.tipoPropiedad.tipo,
+      },
+      idUsuario: propiedadEdicion.idUsuario,
+    });
     console.log(formData);
-    const deleteProp=deletePropiedad(formData, token)
+    const deleteProp = deletePropiedad(formData, token);
+    // Hacer la validación para mostrar el toast
+    if (deleteProp.message === "Eliminacion correcta") {
+      showToastSuccess('Propiedad eliminada', 'La propiedad se eliminó correctamente');
+      closeModalOptions();
+    } else {
+      showToastError('Propiedad no eliminada', 'La propiedad no se pudo eliminar');
+    }
     formatFormData();
-    closeModalOptions();
-  }
-  // Simulación de llamada a API para obtener los servicios
-  useEffect(() => {
-    loadData();
-  }, [formData]);
+  };
+
   return (
+    <>
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {propiedades.length === 0 && (
         <SinSolicitudes
@@ -238,7 +282,7 @@ export default function Propiedades() {
           <Text style={styles.txtAdd}>Agregar</Text>
         </TouchableOpacity>
       </View>
-      <ListPropiedades 
+      <ListPropiedades
         propiedades={propiedades}
         propiedadEdicion={propiedadEdicion}
         setPropiedadEdicion={setPropiedadEdicion}
@@ -260,15 +304,17 @@ export default function Propiedades() {
       />
 
       <AccionesModal
-                modalOptionVisible={modalOptionVisible}
-                setModalOptionVisible={setModalOptionVisible}
-                closeModalOptions={closeModalOptions}
-                txtBtnBlue="Editar"
-                txtBtnRed="Eliminar"
-                onPressBlue={openModalPropiedad}
-                onPressRed={handleDelete}
+        modalOptionVisible={modalOptionVisible}
+        setModalOptionVisible={setModalOptionVisible}
+        closeModalOptions={closeModalOptions}
+        txtBtnBlue="Editar"
+        txtBtnRed="Eliminar"
+        onPressBlue={openModalPropiedad}
+        onPressRed={handleDelete}
       />
     </ScrollView>
+      <Toast topOffset={20} />
+    </>
   );
 }
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 //import {API_URL} from '@env'
-const API_URL= 'http://192.168.0.109:2813/ch'
+const API_URL= 'http://clenhometm.trafficmanager.net:2813/ch'
 export const fetchEstados = async (token) => {
   try {
     const response = await axios.get(API_URL+"/catalogo/getEstados", {
@@ -30,7 +30,6 @@ export const fetchTipos = async (token) => {
   };
 
   export const fetchPropiedades = async (idCliente, token) => {
-    console.log(token);
     try {
       const response = await axios.get(API_URL+"/propiedad/getPropiedades?idCliente="+idCliente, {
         headers: {
@@ -58,8 +57,8 @@ export const fetchTipos = async (token) => {
         "Content-Type": "application/json",
       },
   }).then(response=>{
-    console.log(response.data);
-    console.log(fotos)
+    // console.log(response.data);
+    // console.log(fotos)
     //si se envian fotos se guardan
     if(fotos.length>0){
       const uploadFotos=subirFotosPropiedad(fotos, response.data.id, token);
