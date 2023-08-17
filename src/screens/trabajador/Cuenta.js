@@ -123,14 +123,16 @@ export default function Cuenta() {
       </View>
       <ProfileCard 
         userData={originalUserData}
+        infoUser={originalUserData}
         />
 
-        <DataProfile userData={originalUserData} titleResenias={"Lo que dicen los anfitriones sobre mi"}/>
+        <DataProfile userData={originalUserData} infoUser={originalUserData} titleResenias={"Lo que dicen los anfitriones sobre mi"}/>
 
       <ModalEditPerfil 
         modalVisible={modalVisible}
         closeModal={closeModal}
         userData={userData}
+        infoUser={userData}
         handleChange={handleChange}
         editUsuario={editUsuario}
       />

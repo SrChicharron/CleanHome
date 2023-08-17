@@ -8,6 +8,7 @@ export const getUsuario = async (userName) => {
     console.log('getUsuario');
     try {
         const response = await axios.get(`${API_URL}/getUsuario/${userName}`);
+        console.log("Esto lo trae de CuentaAPI " + JSON.stringify(response.data, null, 4));
         return response.data;
     } catch (error) {
         console.log(error);

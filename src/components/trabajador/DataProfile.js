@@ -9,18 +9,18 @@ import useAuth from "../../hooks/UseAuth";
 import {format} from 'date-fns';
 
 export default function DataProfile( props ) {
-    const { userData, titleResenias } = props;
+    const { userData, infoUser } = props;
     const { auth } = useAuth();
 
-    const birthday = format(new Date(userData.birthday), 'dd/MM/yyyy');
+    const birthday = format(new Date(infoUser.birthday), 'dd/MM/yyyy');
 
   return (
     <View>
       <Text style={styles.titleInfo}>Información personal</Text>
-      <Text style={styles.txtDescripcion}>{userData.descripcion}</Text>
+      <Text style={styles.txtDescripcion}>{infoUser.descripcion}</Text>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faUser} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{infoUser?infoUser.name:''} {infoUser?infoUser.lastname:''}</Text>
+        <Text style={styles.txtLabels}>{infoUser.name} {infoUser.lastname}</Text>
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faEnvelope} style={styles.icons} size={24} />
@@ -28,7 +28,7 @@ export default function DataProfile( props ) {
       </View>
       <View style={styles.containerInfo}>
         <FontAwesomeIcon icon={faMobileScreen} style={styles.icons} size={24} />
-        <Text style={styles.txtLabels}>{userData.cellphone}</Text>
+        <Text style={styles.txtLabels}>{infoUser.cellphone}</Text>
       </View>
       <View style={styles.containerInfo}>
         <CakeIcon style={styles.icons} />

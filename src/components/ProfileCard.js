@@ -4,8 +4,8 @@ import VerificateIcon from '../assets/icons/VerificateIcon.svg'
 import AvatarH from "../assets/images/AvatarH.png";
 
 export default function ProfileCard( props ) {
-    const { formData } = props; 
-// console.log("Esto es lo que llega a Profile card : === > " + JSON.stringify(formData, null , 4))
+    const { formData, handleChange, auth, infoUser } = props; 
+console.log("Esto es lo que llega a Profile card : === > " + JSON.stringify(infoUser, null , 4))
 
   return (
     <View style={styles.container}>
@@ -13,8 +13,8 @@ export default function ProfileCard( props ) {
             <Image source={AvatarH} style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
         </View>
-        <Text style={styles.txtName}>{formData.usuario.name} {formData.usuario.lastname}</Text>
-        <Text style={styles.txtRol}>{formData.usuario.username}</Text>
+        <Text style={styles.txtName}>{infoUser.name} {infoUser.lastname}</Text>
+        <Text style={styles.txtRol}>{infoUser.username}</Text>
     </View>
   )
 }

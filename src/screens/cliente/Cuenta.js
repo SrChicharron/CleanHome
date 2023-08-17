@@ -8,14 +8,13 @@ import { useNavigation } from '@react-navigation/native';
 import ProfileCard from '../../components/ProfileCard'
 import ModalEditPerfil from '../../components/trabajador/ModalEditPerfil'
 import DataProfile from '../../components/trabajador/DataProfile'
-import useAuth from '../../hooks/UseAuth';
 import axios from 'axios'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import { getUsuario, updateUsuario } from "../../api/trabajador/CuentaApi";
 import  Toast  from 'react-native-toast-message'
+import useAuth from '../../hooks/UseAuth';
+
+
 export default function Cuenta() {
-  const showToast = () => {
-    Toast.show();
-  }
   const {auth,logout} = useAuth()
   const token=auth.token;
   const [modalVisible, setModalVisible] = useState(false);
@@ -28,6 +27,12 @@ export default function Cuenta() {
     descripcion: "",
     //urlImgProfile: null,
   });
+
+  
+  useEffect(() => {
+    getInfoUsuario();
+  }, []);
+
 
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
@@ -64,28 +69,23 @@ export default function Cuenta() {
   };
 
   const getInfoUsuario= async () => {
-    try{
+      const response = await getUsuario(auth.username);
+      setInfoUser(response);
+      console.log("response data user ====> " + JSON.stringify(response, null , 4))
       //const response = await axios.get(urlgetInfo);
-      const response = await axios.get(urlgetInfo,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers":
-              "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
-            "Content-Type": "application/json",
-            'Authorization':`Bearer ${token}`
-          }
-        });
-      setInfoUser(response.data);
-    }catch(error){
-        console.log(error)
-    }
+      // const response = await axios.get(urlgetInfo,
+      //   {
+      //     headers: {
+      //       "Access-Control-Allow-Origin": "*",
+      //       "Access-Control-Allow-Headers":
+      //         "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
+      //       "Content-Type": "application/json",
+      //       'Authorization':`Bearer ${token}`
+      //     }
+      //   });
+      // setInfoUser(response.data);
+      // console.log("response data user ====> " + JSON.stringify(response.data, null , 4))
   };
-
-  useEffect(() => {
-    getInfoUsuario();
-  });
-
   // useFocusEffect(
   //   useCallback(()=>{
   //       getInfoUsuario();
