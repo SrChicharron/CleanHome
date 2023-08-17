@@ -2,20 +2,18 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import React, { useState, useEffect } from 'react';
 import PubEspacioscomerciales from './Home-tipolimpieza/PubEspacioscomerciales';
 import PubOrganizacionyorden from './Home-tipolimpieza/PubOrganizacionyorden';
-import {
-  getPublicaciones
-
-
-} from "../../api/trabajador/PostulacionesApi";
+import { getPublicaciones } from "../../api/trabajador/PostulacionesApi";
 import PubLimpiezaHogar from './Home-tipolimpieza/PubLimpiezaHogar';
+import useAuth from "../../hooks/UseAuth";
 
 
 export default function Home() {
-
-
+  const { auth } = useAuth();
   const [filterOption, setFilterOption] = useState("Limpieza Hogar");
   const [publicaciones, setPublicaciones] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const token = auth.token;
+
 
   const handleFilterClick = (option) => {
     setFilterOption(option);
@@ -24,14 +22,12 @@ export default function Home() {
 
   useEffect(() => {
     loadPublicaciones();
-
-  }, []);
+  }, [publicaciones]);
 
 
   const loadPublicaciones = async () => {
-    const responseData = await getPublicaciones();
-    setPublicaciones(responseData.reverse());
-    console.log(JSON.stringify(publicaciones, null, 4))
+    const responseData = await getPublicaciones(token);
+    setPublicaciones(responseData);
   };
 
   const openModal = () => {
@@ -47,11 +43,11 @@ export default function Home() {
     <View style={styles.container}>
 
       <View style={styles.containerFilter}>
-        <ScrollView contentContainerStyle={styles.scrollContent} horizontal>
+        <ScrollView contentContainerStyle={styles.scrollContent} horizontal showsHorizontalScrollIndicator={false} >
           <TouchableOpacity
             style={[
               styles.containerTextFilter,
-              filterOption === 'LimpiezaHogar' && styles.activeOptionBtnFilter,
+              filterOption === 'Limpieza Hogar' && styles.activeOptionBtnFilter,
             ]}
             onPress={() => handleFilterClick('Limpieza Hogar')}
           >
@@ -86,10 +82,6 @@ export default function Home() {
       {filterOption === "Limpieza Hogar" && (
         <PubLimpiezaHogar
           publicaciones={publicaciones}
-          setFilterOption={setFilterOption}
-           openModal={openModal}
-           
-
         />
       )}
       {filterOption === "Espacios comerciales" && (
@@ -121,22 +113,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerFilter: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    height: 80,
-    paddingBottom: 10,
-    width: '100%',
+    height: 60,
+    marginTop: -10,
   },
   containerTextFilter: {
     paddingHorizontal: 12,
     paddingVertical: 8,
     backgroundColor: '#F5F5F5',
     borderRadius: 8,
-    width: '30%',
-    marginHorizontal: 20,
     alignItems: 'center',
     flex: 1,
+    marginRight: 16,
   },
   activeOptionBtnFilter: {
     color: '#E6E6E6',
@@ -148,13 +135,6 @@ const styles = StyleSheet.create({
   textFilter: {
     textAlign: 'center',
     color: '#707070'
-  },
-  scrollContent: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 80,
-    paddingBottom: 20,
   },
   scrollContent: {
     flexGrow: 1,

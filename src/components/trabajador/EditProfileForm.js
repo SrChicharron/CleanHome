@@ -2,55 +2,15 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
+  StyleSheet
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Picker } from "@react-native-picker/picker";
-import * as ImagePicker from "expo-image-picker";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faCamera } from "@fortawesome/free-solid-svg-icons";
 
 export default function EditProfileForm(props) {
   const { userData, handleChange } = props;
-  const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      handleChange("foto", result.assets[0].uri);
-    }
-  };
 
   return (
     <View style={styles.container}>
-        <View style={styles.containerImage}>
-            <TouchableOpacity
-                style={styles.imageContainer}
-                onPress={() => pickImage()}
-            >
-                <Image source={{ uri: image }} style={styles.image} />
-                {/* Poner icono de camara de fontawesome */}
-                <FontAwesomeIcon
-                style={styles.iconCamera}
-                icon={faCamera}
-                size={32}
-                color="#373737"
-                />
-            </TouchableOpacity>
-        </View>
-
       <Text style={styles.label}>Nombre</Text>
       <TextInput
         style={styles.input}

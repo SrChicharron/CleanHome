@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // const API_URL= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/auth/getUsuario'
-const API_URL = 'http://192.168.0.16:2813/ch/auth';
+const API_URL = 'http://clenhometm.trafficmanager.net:2813/ch/auth';
 
 // FUNCIÓN PARA OBTENER LOS DATOS DE UN USUARIO
 export const getUsuario = async (userName) => {

@@ -1,26 +1,33 @@
 import axios from 'axios'
 
-
-// const API_URL= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/publicacion'
-const API_URL= 'http://192.168.0.16:2813/ch/postulacion'
-const API_URL_RESENA = 'http://192.168.0.16:2813/ch/resena'
-const API_URL_SERVICIO= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/servicio'
-const API_URL_PROPIEDAD= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/propiedad'
+const API_URL_PUBLICACION= 'http://clenhometm.trafficmanager.net:2813/ch/publicacion'
+const API_URL= 'http://clenhometm.trafficmanager.net:2813/ch/postulacion'
+const API_URL_RESENA = 'http://clenhometm.trafficmanager.net:2813/ch/resena'
+const API_URL_SERVICIO= 'http://clenhometm.trafficmanager.net:2813/ch/servicio'
+const API_URL_PROPIEDAD= 'http://clenhometm.trafficmanager.net:2813/ch/propiedad'
 
 // FUNCIÓN PARA OBTENER LAS PUBLICACIONES DE UN CLIENTE
-export const getPublicaciones = async () => {
-  console.log("getPublicaciones")
+export const getPublicaciones = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/getPublicaciones`);
+    const response = await axios.get(`${API_URL_PUBLICACION}/getPublicaciones`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     return response.data;
   } catch (error) {
     console.log(error);
   }
 }
 
-export const getPostulaciones = async (id) => {
+export const getPostulaciones = async (id, token) => {
   try {
-    const response = await axios.get(`${API_URL}/getPostulacionesEmpleado?idEmpleado=${id}`);
+    const response = await axios.get(`${API_URL}/getPostulacionesEmpleado?idEmpleado=${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -28,10 +35,44 @@ export const getPostulaciones = async (id) => {
 }
 
 // FUNCIÓN PARA ACTUALIZAR POSTULACIÓN
-export const updatePostulacion = async (postulacion) => {
-  console.log("Esto es lo que llegó a la api de updatePostulacion: ", postulacion)
+export const updatePostulacion = async (postulacion, token) => {
   try {
-    const response = await axios.post(`${API_URL}/updatePostulacion`, postulacion);
+    const response = await axios.post(`${API_URL}/updatePostulacion`, postulacion, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// FUNCIÓN PARA AÑADIR UNA RESEÑA
+export const addResena = async (resena, token) => {
+  try {
+    const response = await axios.post(`${API_URL_RESENA}/addResena`, resena, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// FUNCIÓN PARA ADDPOSTULACION
+export const addPostulacion = async (postulacion, token) => {
+  try {
+    const response = await axios.post(`${API_URL}/addPostulacion`, postulacion, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
     return response.data;
   } catch (error) {
     console.log(error);

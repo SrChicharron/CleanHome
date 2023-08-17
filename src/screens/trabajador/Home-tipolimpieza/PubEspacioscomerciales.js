@@ -31,8 +31,6 @@ export default function PubEspacioscomerciales({ publicaciones, setFilterOption}
   useEffect(() => {
     const publicacionesPorEspacio = filtrarPublicacionesPorEspacio();
     setPublicacionesPorEspacio(publicacionesPorEspacio);
-    console.log(publicacionesPorEspacio)
-
   }, [publicaciones]);
 
   return (

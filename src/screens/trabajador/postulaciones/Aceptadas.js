@@ -11,10 +11,15 @@ import { useNavigation } from "@react-navigation/native";
 import SinSolicitudes from "../../../components/SinSolicitudes";
 import ModalReseniaTrabajo from "../../../components/trabajador/ModalReseniaTrabajo";
 import PostulacionesList from "../../../components/trabajador/PostulacionesList";
-import { addResena, updatePostulacion } from "../../../api/trabajador/PostulacionesApi";
+import {
+  addResena,
+  updatePostulacion,
+} from "../../../api/trabajador/PostulacionesApi";
 import Toast from "react-native-toast-message";
+import useAuth from "../../../hooks/UseAuth";
 
 export default function Aceptadas({ postulaciones }) {
+  const { auth } = useAuth();
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [postulacionesAceptadas, setPostulacionesAceptadas] = useState([]);
@@ -88,6 +93,7 @@ export default function Aceptadas({ postulaciones }) {
     calificacion: 0,
     comentarios: "",
   });
+  const token = auth.token;
 
   useEffect(() => {
     setPostulacionesAceptadas(filterPostulacionesAceptadas());
@@ -106,7 +112,6 @@ export default function Aceptadas({ postulaciones }) {
       ...resenia,
       [name]: value,
     });
-    console.log(JSON.stringify(resenia, null, 4));
   };
 
   // Agregar función para formatear el objeto formData
@@ -127,7 +132,6 @@ export default function Aceptadas({ postulaciones }) {
   };
 
   const openModal = (postulacion) => {
-    console.log("postulacion ===> ", JSON.stringify(postulacion, null, 4));
     setFormDataResenia(postulacion);
     setModalVisible(true);
   };
@@ -140,8 +144,8 @@ export default function Aceptadas({ postulaciones }) {
   const showToastSuccess = () => {
     Toast.show({
       type: "success",
-      text1: "Actualizado",
-      text2: "Tu información se ha actualizado correctamente 🥳",
+      text1: "Postulación finalizada",
+      text2: "Tu evaluación se ha enviado correctamente 🥳",
     });
   };
 
@@ -149,7 +153,7 @@ export default function Aceptadas({ postulaciones }) {
     Toast.show({
       type: "error",
       text1: "Error",
-      text2: "Ha ocurrido un error al actualizar tu información 😥",
+      text2: "Ha ocurrido un error al finalizar tu evaluación 😥",
     });
   };
 
@@ -159,25 +163,26 @@ export default function Aceptadas({ postulaciones }) {
     resenia.evaluado.id = formDataResenia.cliente.id;
     resenia.evaluador.id = formDataResenia.empleado.id;
 
-    console.log("resenia ===> ", JSON.stringify(resenia, null, 4));
     try {
-      const response = await addResena(resenia);
-      console.log("response ===> ", JSON.stringify(response, null, 4));
+      const response = await addResena(resenia, token);
       if (response) {
         const dataPostulacionUpdate = {
-            id: formDataResenia.id,
-            publicacion: {
-              id: formDataResenia.publicacion.id
-            },
-            cliente: {
-              id: formDataResenia.cliente.id
-            },
-            empleado: {
-              id: formDataResenia.empleado.id
-            },
-            estatus: "finalizada"
-          };
-        const responseUpdatePostulacion = await updatePostulacion(dataPostulacionUpdate);
+          id: formDataResenia.id,
+          publicacion: {
+            id: formDataResenia.publicacion.id,
+          },
+          cliente: {
+            id: formDataResenia.cliente.id,
+          },
+          empleado: {
+            id: formDataResenia.empleado.id,
+          },
+          estatus: "finalizada",
+        };
+        const responseUpdatePostulacion = await updatePostulacion(
+          dataPostulacionUpdate,
+          token
+        );
         showToastSuccess();
         closeModal();
       }
@@ -214,7 +219,7 @@ export default function Aceptadas({ postulaciones }) {
         resenia={resenia}
         onAddResena={onAddResena}
       />
-    <Toast/>
+      <Toast topOffset={20} />
     </View>
   );
 }

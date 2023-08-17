@@ -34,12 +34,6 @@ export default function DataProfile( props ) {
         <CakeIcon style={styles.icons} />
         <Text style={styles.txtLabels}>{birthday}</Text>
       </View>
-      <Text style={styles.titleResenias}>{titleResenias}</Text>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ResenaCard/>
-            <ResenaCard/>
-            <ResenaCard/>
-      </ScrollView>
     </View>
   )
 }
@@ -58,10 +52,10 @@ const styles = StyleSheet.create({
     containerInfo: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 8,
+        marginVertical: 8,
         borderBottomColor: "#DEDEDE",
         borderBottomWidth: 1,
-        paddingBottom: 8,
+        paddingBottom: 16,
     },
     icons: {
         color: "#aaaaaa",

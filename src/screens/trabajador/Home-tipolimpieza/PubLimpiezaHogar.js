@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import SinPublicaciones from "../../../components/SinPublicaciones";
 import PublicacionesPost from "../../../components/trabajador/PublicacionPost";
 
-export default function PubLimpiezaHogar({ publicaciones, setFilterOption, openModal }) {
+export default function PubLimpiezaHogar({ publicaciones }) {
   const filtrarPublicacionesPorLimpieza = () => {
     if (publicaciones) {
       return publicaciones.filter(
@@ -18,7 +18,6 @@ export default function PubLimpiezaHogar({ publicaciones, setFilterOption, openM
   useEffect(() => {
     const publicacionesPorLimpieza = filtrarPublicacionesPorLimpieza();
     setPublicacionesPorLimpieza(publicacionesPorLimpieza);
-    console.log(publicacionesPorLimpieza)
   }, [publicaciones]);
 
   return (
@@ -27,7 +26,6 @@ export default function PubLimpiezaHogar({ publicaciones, setFilterOption, openM
         <SinPublicaciones
           mensajeTitulo="No hay publicaciones de limpieza hogar"
           mensajeDescripcion="¡Oops aún no han  creado ninguna publicación para ofrecer tus servicio!"
-
         />
       )}
 
@@ -43,7 +41,6 @@ export default function PubLimpiezaHogar({ publicaciones, setFilterOption, openM
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 8,
   },
   emptyContent: {
     flex: 1,

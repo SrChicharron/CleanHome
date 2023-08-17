@@ -3,13 +3,11 @@ import React from 'react'
 import PublicacionCardT from './CardTrabajos';
 
 export default function PublicacionPost( props ) {
-  const { publicacionesT, openModalOptions ,openModal} = props;
+  const { publicacionesT } = props;
 
   const renderItem = ({ item }) => (
     <PublicacionCardT
       publicacion={item}
-      openModalOptions={(publicacion) => openModalOptions(publicacion)}
-      openModal={openModal}
     />
   );
 

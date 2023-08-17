@@ -1,15 +1,19 @@
 import axios from 'axios'
 
-const API_URL= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/publicacion'
-const API_URL_SERVICIO= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/servicio'
-const API_URL_PROPIEDAD= 'https://cleanhomeapi.ashymeadow-04120cb0.westus2.azurecontainerapps.io/ch/propiedad'
+const API_URL= 'http://clenhometm.trafficmanager.net:2813/ch/publicacion'
+const API_URL_SERVICIO= 'http://clenhometm.trafficmanager.net:2813/ch/servicio'
+const API_URL_PROPIEDAD= 'http://clenhometm.trafficmanager.net:2813/ch/propiedad'
 
 
 // FUNCIÓN PARA OBTENER LAS PUBLICACIONES DE UN CLIENTE
-export const getPublicaciones = async () => {
-  console.log("getPublicaciones")
+export const getPublicaciones = async (token) => {
   try {
-    const response = await axios.get(`${API_URL}/getPublicaciones`);
+    const response = await axios.get(`${API_URL}/getPublicaciones`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
     return response.data;
   } catch (error) {
     console.log(error);

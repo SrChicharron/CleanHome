@@ -20,7 +20,6 @@ export default function PubOrganizacionyorden({ publicaciones, setFilterOption,o
     }
     return [];
   };
-  console.log(publicacionesPorOrden)
   const [publicacionesPorOrden, setPublicacionesPorOrden] = useState(filtrarPublicacionesPorOrden());
 
   
@@ -30,8 +29,6 @@ export default function PubOrganizacionyorden({ publicaciones, setFilterOption,o
   useEffect(() => {
     const publicacionesPorOrden = filtrarPublicacionesPorOrden();
     setPublicacionesPorOrden(publicacionesPorOrden);
-    console.log(publicacionesPorOrden)
-
   }, [publicaciones]);
 
   return (

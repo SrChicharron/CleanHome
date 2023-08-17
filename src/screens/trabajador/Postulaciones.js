@@ -10,15 +10,15 @@ export default function Postulaciones() {
   const { auth } = useAuth();
   const [activeOption, setActiveOption] = useState("pendiente");
   const [postulaciones, setPostulaciones] = useState([]);
+  const token = auth.token;
 
   useEffect(() => {
     loadPostulaciones();
   }, [postulaciones]);
 
   const loadPostulaciones = async () => {
-    const response = await getPostulaciones(auth.idUsuario);
+    const response = await getPostulaciones(auth.idUsuario, token);
     setPostulaciones(response);
-    // console.log("Postulaciones: ", JSON.stringify(response, null, 4));
   };
 
   const handleOptionClick = (option) => {
