@@ -6,17 +6,22 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
-  FlatList,
+  Image,
+  ScrollView,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../components/atoms/Button";
 import { Picker } from "@react-native-picker/picker";
 import { format } from "date-fns";
+import Toast from "react-native-toast-message";
+import * as ImagePicker from "expo-image-picker";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
 
 const options = [
-  { label: "Cliente", value: "cliente" },
-  { label: "Trabajador", value: "trabajador" },
+  { label: "Cliente", value: "ROLE_CLIENTE" },
+  { label: "Trabajador", value: "ROLE_EMPLEADO" },
 ];
 
 export default function RegisterForm() {
@@ -26,11 +31,46 @@ export default function RegisterForm() {
   const [userName, setUserName] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [passwordRepeat, setPasswordRepeat] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [birthDate, setBirthDate] = useState(new Date());
   const [userRole, setUserRole] = useState(null);
+  const [ine, setIne] = useState(null);
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    //console.log(result);
+
+    if (!result.canceled) {
+      setIne(result.assets[0].uri);
+      //handleChange("imagen", result.assets[0].uri);
+      // handleImagenes(result.assets[0].uri);
+    }
+  };
+
+  const showToastSuccess = (message) => {
+    Toast.show({
+      type: "success",
+      text1: "Registro exitoso",
+      text2: `${message}  🥳`,
+    });
+  };
+
+  const showToastError = (message) => {
+    Toast.show({
+      type: "error",
+      text1: "Error",
+      text2: `${message}  😥`,
+    });
+  };
 
   const handleDateChange = (event, selectedDate) => {
     if (event.type === "set") {
@@ -43,7 +83,8 @@ export default function RegisterForm() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleRegister = () => {
-    const urlRegister = "http://localhost:2813/ch/auth/register";
+    const urlRegister =
+      "http://clenhometm.trafficmanager.net:2813/ch/auth/register";
 
     const userData = {
       username: userName,
@@ -69,10 +110,16 @@ export default function RegisterForm() {
       .then((response) => {
         if (!response.ok) {
           if (response.status === 409) {
+            showToastError(
+              "El nombre de usuario o el correo electrónico ya han sido utilizados"
+            );
             throw new Error(
               "El nombre de usuario o el correo electrónico ya han sido utilizados"
             );
           } else {
+            showToastError(
+              "Error al registrar el usuario,usuario o email ya registrado"
+            );
             throw new Error(
               "Error al registrar el usuario,usuario o email ya registrado"
             );
@@ -82,15 +129,19 @@ export default function RegisterForm() {
       })
 
       .then((data) => {
-        setRegistrationSuccess(true);
-        console.log("Usuario registrado con éxito:", data);
+        showToastSuccess("Usuario registrado con éxito");
+        // Esperar 2 segundos
+        setTimeout(() => {
+          setRegistrationSuccess(true);
+          navigation.navigate("Login");
+        }, 5000);
       })
       .catch((error) => {
-        console.error(error);
+        showToastError("Error al registrar el usuario");
       });
   };
   return (
-    <>
+    <ScrollView style={styles.container}>
       <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
@@ -133,6 +184,7 @@ export default function RegisterForm() {
         <TextInput
           style={styles.input}
           placeholder="Celular"
+          maxLength={10}
           value={phoneNumber}
           onChangeText={setPhoneNumber}
         />
@@ -154,15 +206,15 @@ export default function RegisterForm() {
           style={styles.input}
           placeholder="Repetir contraseña"
           secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+          value={passwordRepeat}
+          onChangeText={setPasswordRepeat}
         />
         <Picker
           style={styles.picker}
           selectedValue={userRole}
           onValueChange={(itemValue) => setUserRole(itemValue)}
         >
-          <Picker.Item label="Selecciona un rol" style={styles.pickerItem}  />
+          <Picker.Item label="Selecciona un rol" style={styles.pickerItem} />
           {options.map((option) => (
             <Picker.Item
               style={styles.pickerItemModal}
@@ -172,6 +224,20 @@ export default function RegisterForm() {
             />
           ))}
         </Picker>
+        <Text style={styles.label}>INE</Text>
+        <TouchableOpacity
+          style={styles.imageContainerComprobante}
+          onPress={() => pickImage()}
+        >
+          <Image source={{ uri: ine }} style={styles.imageComprobante} />
+          {/* Poner icono de camara de fontawesome */}
+          <FontAwesomeIcon
+            style={styles.iconCameraComrobante}
+            icon={faCamera}
+            size={24}
+            color="#373737"
+          />
+        </TouchableOpacity>
       </View>
 
       <Button
@@ -187,17 +253,23 @@ export default function RegisterForm() {
             !birthDate ||
             !userRole
           ) {
-            console.error("Por favor, completa todos los campos obligatorios.");
+            showToastError("Todos los campos son obligatorios.");
             return;
           }
 
           if (!phoneNumber.trim()) {
-            console.error("El número de teléfono no debe estar vacío.");
+            showToastError("El número de teléfono no debe estar vacío.");
             return;
           }
 
           if (!birthDate) {
-            console.error("La fecha de nacimiento no debe estar vacía.");
+            showToastError("La fecha de nacimiento no debe estar vacía.");
+            return;
+          }
+
+          //Validación de contraseñas para que sean iguales
+          if (password !== passwordRepeat) {
+            showToastError("Las contraseñas no coinciden.");
             return;
           }
           handleRegister();
@@ -213,11 +285,15 @@ export default function RegisterForm() {
           <Text style={{ color: "#075493" }}>Inicia sesión</Text>
         </Text>
       </TouchableOpacity>
-    </>
+      <Toast topOffset={120} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 50,
+  },
   formContainer: {
     width: "100%",
     marginBottom: 20,
@@ -240,7 +316,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#6E6E6E",
-    marginBottom: 10,
+    marginTop: 10,
     marginLeft: 3,
     textAlign: "justify",
   },
@@ -299,5 +375,24 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 15,
     backgroundColor: "rgba(0, 0, 0, 0.1)",
-  }
+  },
+  imageContainerComprobante: {
+    alignItems: "center",
+    width: "100%",
+    height: 50,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  iconCameraComrobante: {
+    position: "absolute",
+    //Posicionar al centro
+    top: 10,
+    left: "50%",
+  },
+  imageComprobante: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
 });

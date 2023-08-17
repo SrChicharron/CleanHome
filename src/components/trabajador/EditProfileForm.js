@@ -1,10 +1,8 @@
 import {
-    View,
-    Text,
-    TextInput,
-    StyleSheet,
-    TouchableOpacity,
-    Image,
+  View,
+  Text,
+  TextInput,
+  StyleSheet
 } from "react-native";
 import React, { useState, useEffect } from "react";
 
@@ -46,25 +44,48 @@ export default function EditProfileForm(props) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-    },
-    label: {
-        fontSize: 16,
-        marginBottom: 8,
-    },
-    input: {
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 10,
-        backgroundColor: "#F5F5F5",
-    },
-    labelDescripcion: {
-        height: 100,
-        textAlignVertical: "top",
-    },
-    picker: {
-        backgroundColor: "#F5F5F5",
-        borderRadius: 5,
-
-    }
+  container: {},
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  input: {
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: "#F5F5F5",
+  },
+  labelDescripcion: {
+    height: 100,
+    textAlignVertical: "top",
+  },
+  picker: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 5,
+  },
+  containerImage: {
+    alignItems: "center",
+  },
+  imageContainer: {
+    alignItems: "center",
+    width: 200,
+    height: 200,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 100,
+    marginBottom: 8,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "stretch",
+    borderRadius: 10,
+  },
+  iconCamera: {
+    position: "absolute",
+    //Posicionar al centro
+    top: "50%",
+    left: "50%",
+    marginLeft: -12,
+    marginTop: -12,
+  },
 });

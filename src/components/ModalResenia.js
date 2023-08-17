@@ -6,7 +6,24 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import ReseniaForm from "./ReseniaForm";
 
 export default function ModalResenia( props ) {
-    const { modalVisible, closeModal, publicaciones, handleChange, titleModal } = props;
+    const { modalVisible, closeModal, publicacion, handleChange, resenia, onAddResenia } = props;
+
+        // Se crea objeto para mandar reseña
+        // const resenia = {
+        //     publicacion: {
+        //         id: publicaciones.id,
+        //     },
+        //     evaluado: {
+        //         id: publicaciones.usuario.id,
+        //     },
+        //     evaluador: {
+        //         id: publicaciones.propiedad.idUsuario,
+        //     },
+        //     calificacion: reseniaData.calificacion,
+        //     comentarios: reseniaData.comentarios,
+        // }
+
+    console.log("Resenia: ", resenia)
     return (
         <Modal
         visible={modalVisible}
@@ -28,14 +45,14 @@ export default function ModalResenia( props ) {
                 </TouchableOpacity>
                 <KeyboardAwareScrollView style={ styles.bodyModal }>
                     {/* Formulario para crear una nueva publicación */}
-                    <ReseniaForm formData={publicaciones} handleChange={handleChange}/>
+                    <ReseniaForm formData={publicacion} handleChange={handleChange} reseniaData={resenia}/>
                 </KeyboardAwareScrollView>
                 <View style={ styles.footerModal }>
                     {/* Botones para publicar y cancelar */}
                     <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
                         <Text style={ styles.txtBtn }>Cancelar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }}>
+                    <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={onAddResenia}>
                         <Text style={ styles.txtBtn }>Enviar y finalizar</Text>
                     </TouchableOpacity>
                 </View>

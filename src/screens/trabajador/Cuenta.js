@@ -4,48 +4,61 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModalEditPerfil from "../../components/trabajador/ModalEditPerfil";
 import ProfileCard from "../../components/ProfileCard";
 import DataProfile from "../../components/trabajador/DataProfile";
+import Toast from 'react-native-toast-message';
+import { getUsuario, updateUsuario } from "../../api/trabajador/CuentaApi";
+import useAuth from "../../hooks/UseAuth";
 
 export default function Cuenta() {
+  const { auth, logout } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
-  const [formData, setFormData] = useState({
-    nombre: "",
-    apellidos: "",
-    fechaNac: "",
-    celular: "",
-    correo: "",
-    rol: "",
-    sexo: "",
+  const [originalUserData, setOriginalUserData] = useState({
+    name: "",
+    lastname: "",
+    cellphone: "",
+    birthday: null,
+    username: "",
     descripcion: "",
-    urlImgProfile: null,
+    foto: null,
   });
-
+  const [userData, setUserData] = useState({
+    name: "",
+    lastname: "",
+    cellphone: "",
+    birthday: null,
+    username: "",
+    descripcion: "",
+    foto: null,
+  })
+  useEffect(() => {
+      getUserData();
+  }, [])
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
+    setUserData((prevUserData) =>  ({
+      ...prevUserData,
       [name]: value,
-    });
-    console.log(formData)
+    }));
+    console.log("handleChange ==> " + JSON.stringify(userData, null, 4))
   };
 
+  // FUNCIÓN PARA OBTENER LA INFORMACIÓN DEL USUARIO
+  const getUserData = async () => {
+    const response = await getUsuario(auth.username);
+    setOriginalUserData(response);
+    setUserData(response);
+    console.log("UserData ====> = " + JSON.stringify(userData, null, 4))
+    console.log("OriginalUserData ====> = " + JSON.stringify(originalUserData, null, 4))
+  }
+  
   // Agregar función para formatear el objeto formData 
-  const formatFormData = () => {
-    setFormData({
-      nombre: "",
-      apellidos: "",
-      fechaNac: "",
-      celular: "",
-      correo: "",
-      rol: "",
-      sexo: "",
-      descripcion: "",
-      urlImgProfile: null,
-    });
+  const formatUserData = () => {
+    setUserData({...originalUserData});
   }
 
   const openModal = () => {
@@ -54,8 +67,43 @@ export default function Cuenta() {
 
   const closeModal = () => {
     setModalVisible(false);
-    formatFormData();
+    formatUserData();
   };
+
+
+  // FUNCIÓN PARA EDITAR A UN USUARIO
+  const editUsuario = async () => {
+    const editUserData = {
+      ...userData,
+    }
+    try {
+      const response = await updateUsuario(editUserData, auth.username, auth.token);
+      showToastSuccess();
+      //Asignar el nuevo usuario al estado originalUserData. Por el momento no regresa el usuario por lo que se le asignó la copia
+      setOriginalUserData(editUserData);
+      closeModal();
+  } catch (error) {
+      console.log(error);
+      showToastError();
+      closeModal();
+  }
+  }
+
+  const showToastSuccess = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Actualizado',
+      text2: 'Tu información se ha actualizado correctamente 🥳'
+    });
+  }
+
+  const showToastError = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Ha ocurrido un error al actualizar tu información 😥'
+    });
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -66,19 +114,28 @@ export default function Cuenta() {
         >
           <Text style={styles.txtAdd}>Editar</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.containerBtnLinkAdd}
+          onPress={logout}
+        >
+          <Text style={styles.txtAdd}>Cerrar sesión</Text>
+        </TouchableOpacity>
       </View>
       <ProfileCard 
-        formData={formData}
-        handleChange={handleChange}
+        userData={originalUserData}
         />
 
-        <DataProfile formData={formData} titleResenias={"Lo que dicen los anfitriones sobre mi"}/>
+        <DataProfile userData={originalUserData} titleResenias={"Lo que dicen los anfitriones sobre mi"}/>
 
       <ModalEditPerfil 
         modalVisible={modalVisible}
         closeModal={closeModal}
-        formData={formData}
+        userData={userData}
         handleChange={handleChange}
+        editUsuario={editUsuario}
+      />
+      <Toast
+        topOffset={20}
       />
     </ScrollView>
   )
@@ -91,7 +148,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   containerLinkAdd: {
-    alignItems: "flex-end",
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   containerBtnLinkAdd: {
     borderRadius: 8,

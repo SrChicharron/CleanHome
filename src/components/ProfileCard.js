@@ -1,44 +1,20 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from "react";
-import ProfileImg from '../assets/images/ImgProfile.png'
 import VerificateIcon from '../assets/icons/VerificateIcon.svg'
-import * as ImagePicker from "expo-image-picker";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
+import AvatarH from "../assets/images/AvatarH.png";
 
 export default function ProfileCard( props ) {
-    const { formData, handleChange, auth, infoUser } = props; 
-    const [image, setImage] = useState(null);
-    
-    const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [4, 3],
-          quality: 1,
-        });
-    
-        console.log(result);
-    
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-            handleChange("urlImgProfile", result.assets[0].uri);
-        }
-      };
+    const { formData } = props; 
+// console.log("Esto es lo que llega a Profile card : === > " + JSON.stringify(formData, null , 4))
 
   return (
-    
     <View style={styles.container}>
-        <TouchableOpacity 
-            style={styles.containerImage} 
-            onPress={() => pickImage()}
-        >
-            <Image style={styles.profileImg}/>
+        <View style={styles.containerImage}>
+            <Image source={AvatarH} style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
-        </TouchableOpacity>
-        <Text style={styles.txtName}>{infoUser?infoUser.name:''} {infoUser?infoUser.lastname:''}</Text>
-        <Text style={styles.txtRol}>{auth.rol}</Text>
+        </View>
+        <Text style={styles.txtName}>{formData.usuario.name} {formData.usuario.lastname}</Text>
+        <Text style={styles.txtRol}>{formData.usuario.username}</Text>
     </View>
   )
 }
@@ -53,7 +29,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         width: '99%',
-        height: 250,
+        height: 270,
         elevation: 5, // Esto agregará la sombra en Android
         shadowColor: '#000', // Esto agregará la sombra en iOS
         shadowOffset: {
@@ -64,19 +40,16 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
     },
     profileImg: {
-        width: 150,
-        height: 150,
-        borderRadius: 100,
-        marginBottom: 16,
+        width: 154,
+        height: 180,
     },
     containerImage: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#F5F5F5',
-        borderRadius: 100,
         width: 150,
-        height: 150,
+        height: 170,
+        marginVertical: 14,
     },
     iconVerif: {
         position: 'absolute',

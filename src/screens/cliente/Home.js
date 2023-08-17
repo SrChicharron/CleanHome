@@ -11,6 +11,7 @@ import PublicacionesActivas from "./home-publicaciones/PublicacionesActivas";
 import PublicacionesAceptadas from "./home-publicaciones/PublicacionesAceptadas";
 import PublicacionesFinalizadas from "./home-publicaciones/PublicacionesFinalizadas";
 import useAuth from "../../hooks/UseAuth";
+import Toast from 'react-native-toast-message';
 import {
   getPublicaciones,
   updatePublicacion,
@@ -22,6 +23,7 @@ import {
 
 export default function Home() {
   const { auth } = useAuth();
+  const token = auth.token;
   const [activeOption, setActiveOption] = useState("activo");
   const [publicaciones, setPublicaciones] = useState([]);
   const [mensajes, setMensajes] = useState("");
@@ -36,14 +38,18 @@ export default function Home() {
   }, [publicaciones]);
 
   const loadServiciosPropiedades = async () => {
-    const responseServicios = await getServicios();
+    const responseServicios = await getServicios(token);
     setListaServicios(responseServicios);
-    const responsePropiedades = await getPropiedades();
+    const responsePropiedades = await getPropiedades(auth);
     setListaPropiedades(responsePropiedades);
   };
 
   const loadPublicaciones = async () => {
-    const responseData = await getPublicaciones();
+    const responseData = await getPublicaciones(token);
+    // Hacer validación del responseData Si no viene vacio mostrar toast
+    if(responseData.length === 0){
+      showToastError("Ups...!", "No tienes publicaciones");
+    }
     setPublicaciones(responseData.reverse());
   };
 
@@ -53,21 +59,29 @@ export default function Home() {
 
   // FUNCIÓN PARA ELIMINAR UNA PUBLICACIÓN
   const onDeletePublicacion = async (publicacion) => {
-    const responseData = await deletePublicacion(publicacion);
-    console.log("responseData = " + JSON.stringify(responseData));
-    setMensajes(responseData);
-    // Actualizar publicaciones eliminando la publicación
-    const updatedPublicaciones = publicaciones.filter(
-      (item) => item.id !== publicacion.id
-    );
-    setPublicaciones(updatedPublicaciones);
+    const responseData = await deletePublicacion(publicacion, token);
+    // Hacer validación del responseData para mostrar toast
+    if (responseData.message === "Eliminacion correcta") {
+      // Actualizar publicaciones eliminando la publicación
+      const updatedPublicaciones = publicaciones.filter(
+        (item) => item.id !== publicacion.id
+      );
+      setPublicaciones(updatedPublicaciones);
+      showToastSuccess("Eliminado", "Publicación eliminada correctamente");
+    } else {
+      showToastError("Ups...!", "Ha ocurrido un error al eliminar la publicación");
+    }
   };
 
   // FUNCIÓN PARA ACTUALIZAR UNA PUBLICACION
   const onUpdatePublicacion = async (publicacion) => {
-    const responseData = await updatePublicacion(publicacion);
-    console.log("responseData ACTUALIZAR  ===>>>>>>>>  " + JSON.stringify(responseData));
-    setMensajes(responseData);
+    const responseData = await updatePublicacion(publicacion, token);
+    // console.log("responseData ACTUALIZAR HOME ===>>>>>>>>  " + JSON.stringify(responseData.message));
+    if (responseData.message === "Actualizacion correcta") {
+      showToastSuccess("Actualizado", "Publicación actualizada correctamente");
+    } else {
+      showToastError("Ups...!", "Ha ocurrido un error al actualizar la publicación");
+    }
     // Actualizar publicaciones
     const updatedPublicaciones = publicaciones.map((item) => {
       if (item.id === publicacion.id) {
@@ -79,9 +93,13 @@ export default function Home() {
   };
 
   const onAddPublicacion = async (publicacion) => {
-    const responseData = await addPublicacion(publicacion);
-    console.log("responseData ===>>>>>>>>  " + JSON.stringify(responseData));
-    setMensajes(responseData);
+    const responseData = await addPublicacion(publicacion, token);
+    console.log("responseData ADDPUB HOME ===>>>>>>>>  " + JSON.stringify(responseData.message));
+    if (responseData.message === "Guardado correcto") {
+      showToastSuccess("Agregado", "Publicación agregada correctamente");
+    } else {
+      showToastError("Ups...!", "Ha ocurrido un error al agregar la publicación");
+    }
     // Actualizar publicaciones
     const updatedPublicaciones = publicaciones.map((item) => {
       if (item.id === publicacion.id) {
@@ -92,6 +110,22 @@ export default function Home() {
     setPublicaciones(updatedPublicaciones);
   }
 
+  const showToastSuccess = (title, message) => {
+    Toast.show({
+      type: 'success',
+      text1: `${title}`,
+      text2: `${message} 🥳`
+    });
+  }
+
+  const showToastError = (title, message) => {
+    Toast.show({
+      type: 'error',
+      text1: `${title}`,
+      text2: `${message} 😥`
+    });
+  }
+  
   return (
     <View style={styles.container}>
       <View style={styles.containerFilter}>

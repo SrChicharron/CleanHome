@@ -17,7 +17,7 @@ export default function Welcome3() {
               <ArrowRight width={24} height={24} fill={"#fff"}/>
           </TouchableOpacity>
           <View style={styles.containerBlur}>
-              <BlurCard text={"Encuentra limpieza profesional en un solo clic"} indicador={1} nextNavigation={"Login"} txtBtn={"Iniciar sesión"}/>
+              <BlurCard text={"Encuentra limpieza profesional en un solo clic"} indicador={3} nextNavigation={"Login"} txtBtn={"Iniciar sesión"}/>
           </View>
       </SafeAreaView>
     )

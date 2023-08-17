@@ -1,4 +1,5 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Alert, Button } from "react-native";
+
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -73,14 +74,14 @@ export default function ModalEditPerfil(props) {
                     </TouchableOpacity>
                     <KeyboardAwareScrollView style={styles.bodyModal}>
                         {/* Formulario para crear una nueva publicación */}
-                        <EditProfileForm formData={formData} handleChange={handleChange} auth={auth} infoUser={infoUser}/>
+                        <EditProfileForm userData={userData} handleChange={handleChange} />
                     </KeyboardAwareScrollView>
                     <View style={styles.footerModal}>
                         {/* Botones para publicar y cancelar */}
                         <TouchableOpacity style={{ ...styles.btnCancelar, ...styles.btn }} onPress={closeModal} >
                             <Text style={styles.txtBtn}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={actualizarInfo} style={{ ...styles.btnPublicar, ...styles.btn }}>
+                        <TouchableOpacity style={{ ...styles.btnPublicar, ...styles.btn }} onPress={editUsuario}>
                             <Text style={styles.txtBtn}>Editar</Text>
                         </TouchableOpacity>
                     </View>

@@ -1,71 +1,78 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState, useEffect } from "react";
 import SinSolicitudes from "../../../components/SinSolicitudes";
 import ModalPublicacion from "../../../components/ModalAddPublicacion";
 import AccionesModal from "../../../components/AccionesModal";
 import PublicacionesList from "../../../components/cliente/PublicacionesList";
 import useAuth from "../../../hooks/UseAuth";
+import Toast from 'react-native-toast-message';
 
-export default function PublicacionesActivas({ publicaciones, onDeletePublicacion, onUpdatePublicacion, onAddPublicacion, listaServicios, listaPropiedades }) {
+export default function PublicacionesActivas({
+  publicaciones,
+  onDeletePublicacion,
+  onUpdatePublicacion,
+  onAddPublicacion,
+  listaServicios,
+  listaPropiedades,
+}) {
   const { auth } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalOptionVisible, setModalOptionVisible] = useState(false);
   const [titleModalPublicacion, setTitleModalPublicacion] = useState("");
   const [indicador, setIndicador] = useState("");
   const [publicacionData, setPublicacionData] = useState({
-    "id": 0,
-    "descripcion": "",
-    "estatus": "",
-    "fecha": "",
-    "pagoOfrecido": 0.0,
-    "usuario": {
-      "id": 0,
-      "name": "",
-      "lastname": "",
-      "cellphone": "",
-      "birthday": "",
-      "username": ""
+    id: 0,
+    descripcion: "",
+    estatus: "",
+    fecha: "",
+    pagoOfrecido: 0.0,
+    usuario: {
+      id: 0,
+      name: "",
+      lastname: "",
+      cellphone: "",
+      birthday: "",
+      username: "",
     },
-    "propiedad": {
-      "id": 0,
-      "titulo": "",
-      "calle": "",
-      "numeroExt": "",
-      "codigoPostal": "",
-      "colonia": "",
-      "referencias": "",
-      "estatus": "",
-      "tipoPropiedad": {
-        "id": 0,
-        "tipo": ""
+    propiedad: {
+      id: 0,
+      titulo: "",
+      calle: "",
+      numeroExt: "",
+      codigoPostal: "",
+      colonia: "",
+      referencias: "",
+      estatus: "",
+      tipoPropiedad: {
+        id: 0,
+        tipo: "",
       },
-      "estado": {
-        "id": 0,
-        "estado": ""
+      estado: {
+        id: 0,
+        estado: "",
       },
-      "idUsuario": 0,
-      "foto": [],
-      "comprobante": []
+      idUsuario: 0,
+      foto: [],
+      comprobante: [],
     },
-    "servicio": {
-      "id": 0,
-      "nombre": "",
-      "descripcion": ""
-    }
+    servicio: {
+      id: 0,
+      nombre: "",
+      descripcion: "",
+    },
   });
 
   // FUNCIÓN PARA FILTRAR LAS PUBLICACIONES ACTIVAS
   const filtrarPublicacionesActivas = () => {
-    return publicaciones.filter(publicacion => publicacion.estatus === "activo");
-  }
+    return publicaciones.filter(
+      (publicacion) => publicacion.estatus === "activo"
+    );
+  };
 
   // Estado para almacenar las publicaciones activas
-  const [publicacionesActivas, setPublicacionesActivas] = useState(filtrarPublicacionesActivas());
+  const [publicacionesActivas, setPublicacionesActivas] = useState(
+    filtrarPublicacionesActivas()
+  );
 
   useEffect(() => {
     const publicacionesActivas = filtrarPublicacionesActivas();
@@ -78,53 +85,53 @@ export default function PublicacionesActivas({ publicaciones, onDeletePublicacio
       ...publicacionData,
       [name]: value,
     });
-    console.log(JSON.stringify(publicacionData, null, 4))
+    console.log(JSON.stringify(publicacionData, null, 4));
   };
 
-  // Agregar función para formatear el objeto publicacion 
+  // Agregar función para formatear el objeto publicacion
   const formatpublicacionData = () => {
     setPublicacionData({
-      "id": 0,
-      "descripcion": "",
-      "estatus": "",
-      "fecha": "",
-      "pagoOfrecido": 0.0,
-      "usuario": {
-        "id": 0,
-        "name": "",
-        "lastname": "",
-        "cellphone": "",
-        "birthday": "",
-        "username": ""
+      id: 0,
+      descripcion: "",
+      estatus: "",
+      fecha: "",
+      pagoOfrecido: 0.0,
+      usuario: {
+        id: 0,
+        name: "",
+        lastname: "",
+        cellphone: "",
+        birthday: "",
+        username: "",
       },
-      "propiedad": {
-        "id": 0,
-        "titulo": "",
-        "calle": "",
-        "numeroExt": "",
-        "codigoPostal": "",
-        "colonia": "",
-        "referencias": "",
-        "estatus": "",
-        "tipoPropiedad": {
-          "id": 0,
-          "tipo": ""
+      propiedad: {
+        id: 0,
+        titulo: "",
+        calle: "",
+        numeroExt: "",
+        codigoPostal: "",
+        colonia: "",
+        referencias: "",
+        estatus: "",
+        tipoPropiedad: {
+          id: 0,
+          tipo: "",
         },
-        "estado": {
-          "id": 0,
-          "estado": ""
+        estado: {
+          id: 0,
+          estado: "",
         },
-        "idUsuario": 0,
-        "foto": [],
-        "comprobante": []
+        idUsuario: 0,
+        foto: [],
+        comprobante: [],
       },
-      "servicio": {
-        "id": 0,
-        "nombre": "",
-        "descripcion": ""
-      }
+      servicio: {
+        id: 0,
+        nombre: "",
+        descripcion: "",
+      },
     });
-  }
+  };
 
   const openModal = (titleModal) => {
     setTitleModalPublicacion(titleModal);
@@ -137,39 +144,42 @@ export default function PublicacionesActivas({ publicaciones, onDeletePublicacio
   };
 
   const openModalOptions = (publicacion) => {
-    console.log("openModalOptions")
+    console.log("openModalOptions");
     setPublicacionData(publicacion);
     setModalOptionVisible(true);
-  }
+  };
 
   const closeModalOptions = () => {
     setModalOptionVisible(false);
-  }
+  };
   const openModalPublicacion = (publicacion) => {
-    console.log("openModalPublicacion")
+    console.log("openModalPublicacion");
     setIndicador("update");
     setModalOptionVisible(false);
     setPublicacionData(publicacion);
     openModal("Editar publicación");
-  }
+  };
   const openModalPublicacionAdd = () => {
-    console.log("openModalPublicacionAdd")
+    console.log("openModalPublicacionAdd");
     setIndicador("add");
     setModalOptionVisible(false);
     openModal("Agregar publicación");
-  }
+  };
 
   const deletePublicacion = (publicacion) => {
     setModalOptionVisible(false);
     onDeletePublicacion(publicacion);
-  }
+  };
 
   const updatePublicacion = () => {
     closeModal();
-    console.log("Publicación Data que se envia a editar =====>>>>> " + JSON.stringify(publicacionData, null, 4));
+    console.log(
+      "Publicación Data que se envia a editar =====>>>>> " +
+        JSON.stringify(publicacionData, null, 4)
+    );
     onUpdatePublicacion(publicacionData);
     formatpublicacionData();
-  }
+  };
 
   const addPublicacion = () => {
     closeModal();
@@ -181,11 +191,30 @@ export default function PublicacionesActivas({ publicaciones, onDeletePublicacio
       usuario: {
         ...publicacionData.usuario,
         id: auth.idUsuario,
-      }
-    }
-    console.log("Publicación Data que se envia a agregar =====>>>>> " + JSON.stringify(newPublicacion, null, 4));
+      },
+    };
+    console.log(
+      "Publicación Data que se envia a agregar =====>>>>> " +
+        JSON.stringify(newPublicacion, null, 4)
+    );
     onAddPublicacion(newPublicacion);
     formatpublicacionData();
+  };
+
+  const showToastSuccess = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Actualizado',
+      text2: 'Tu información se ha actualizado correctamente 🥳'
+    });
+  }
+
+  const showToastError = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Ha ocurrido un error al actualizar tu información 😥'
+    });
   }
 
   return (
@@ -199,14 +228,15 @@ export default function PublicacionesActivas({ publicaciones, onDeletePublicacio
         </TouchableOpacity>
       </View>
 
-      {!publicacionesActivas || publicacionesActivas.length === 0 && (
-        <SinSolicitudes
-          mensajeTitulo="No tienes publicaciones activas"
-          mensajeDescripcion="Publica un trabajo y elije al mejor trabajador para tí"
-          txtBtn="Publicar"
-          onPressBtn={openModalPublicacionAdd}
-        />
-      )}
+      {!publicacionesActivas ||
+        (publicacionesActivas.length === 0 && (
+          <SinSolicitudes
+            mensajeTitulo="No tienes publicaciones activas"
+            mensajeDescripcion="Publica un trabajo y elije al mejor trabajador para tí"
+            txtBtn="Publicar"
+            onPressBtn={openModalPublicacionAdd}
+          />
+        ))}
 
       <PublicacionesList
         publicaciones={publicacionesActivas}
@@ -236,6 +266,8 @@ export default function PublicacionesActivas({ publicaciones, onDeletePublicacio
         onPressRed={(publicacion) => deletePublicacion(publicacion)}
         publicacion={publicacionData}
       />
+
+      <Toast topOffset={20} />
     </View>
   );
 }

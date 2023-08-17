@@ -11,16 +11,17 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
-import { fetchEstados, fetchTipos } from "../api/PropiedadesAPI";
-
+import { fetchEstados, fetchTipos } from "../api/propiedad/PropiedadesAPI";
+import useAuth from "../hooks/UseAuth";
 export default function PropiedadForm(props) {
-  const { formData, handleChange } = props;
+  const { formData, handleChange, handleImagenes, handleComprobantes } = props;
 
   const [listaTipoPropiedades, setListaTipoPropiedades] = useState([]);
   const [ListaEstados, setListaEstados] = useState([]);
   const [image, setImage] = useState(null);
   const [imageComprobante, setImageComprobante] = useState(null);
-
+  const {auth} = useAuth()
+  const token=auth.token;
   const pickImage = async (option) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -29,25 +30,26 @@ export default function PropiedadForm(props) {
       aspect: [4, 3],
       quality: 1,
     });
-
-    console.log(result);
+    //console.log(result);
 
     if (!result.canceled) {
       if (option === 1) {
         setImage(result.assets[0].uri);
-        handleChange("imagen", result.assets[0].uri);
+        //handleChange("imagen", result.assets[0].uri);
+        handleImagenes(result.assets[0].uri);
       } else if (option === 2) {
         setImageComprobante(result.assets[0].uri);
-        handleChange("comprobanteDomicilio", result.assets[0].uri);
+        //handleChange("comprobanteDomicilio", result.assets[0].uri);
+        handleComprobantes(result.assets[0].uri);
       }
     }
   };
 
   const loadData = async () => {
-    const resultEstados = await fetchEstados();
+    const resultEstados = await fetchEstados(token);
     //console.log(resultEstados);
     setListaEstados(resultEstados);
-    const resultTipos = await fetchTipos();
+    const resultTipos = await fetchTipos(token);
     //console.log(resultTipos);
     setListaTipoPropiedades(resultTipos);
   };
@@ -74,8 +76,8 @@ export default function PropiedadForm(props) {
       <Text style={styles.label}>Tipo de propiedad</Text>
       <Picker
         style={styles.picker}
-        selectedValue={formData.idTipoPropiedad}
-        onValueChange={(itemValue) => handleChange("idTipoPropiedad", itemValue)}
+        selectedValue={formData.tipoPropiedad.id}
+        onValueChange={(itemValue) => handleChange("tipoPropiedad", itemValue)}
       >
         <Picker.Item label="Seleccione un tipo de propiedad" value="" />
         {listaTipoPropiedades.map((TipoPropiedad) => (
@@ -91,8 +93,8 @@ export default function PropiedadForm(props) {
       <TextInput
         style={styles.input}
         placeholder="Casa de las lomas"
-        value={formData.tituloCasa}
-        onChangeText={(text) => handleChange("tituloCasa", text)}
+        value={formData.titulo}
+        onChangeText={(text) => handleChange("titulo", text)}
       />
 
       <Text style={styles.label}>Calle / avenida</Text>
@@ -107,8 +109,8 @@ export default function PropiedadForm(props) {
       <TextInput
         style={styles.input}
         placeholder="1611-3"
-        value={formData.numero}
-        onChangeText={(text) => handleChange("numero", text)}
+        value={formData.numeroExt}
+        onChangeText={(text) => handleChange("numeroExt", text)}
       />
 
       <Text style={styles.label}>Código postal</Text>
@@ -130,8 +132,8 @@ export default function PropiedadForm(props) {
       <Text style={styles.label}>Estado</Text>
       <Picker
         style={styles.picker}
-        selectedValue={formData.idEstado}
-        onValueChange={(itemValue) => handleChange("idEstado", itemValue)}
+        selectedValue={formData.estado.id}
+        onValueChange={(itemValue) => handleChange("estado", itemValue)}
       >
         <Picker.Item label="Seleccione un Estado" value="" />
         {ListaEstados.map((estado) => (
