@@ -27,7 +27,7 @@ export default function Finalizados( { postulaciones } ) {
                     mensajeTitulo='No tienes trabajos terminados'
                     mensajeDescripcion='Espera a que un empleador de por finalizado tu trabajo. Mientras, puedes seguir buscando'
                     txtBtn="Empezar a buscar"
-                    onPressBtn={() => navigation.navigate("HomeTrabajador")}
+                    onPressBtn={() => navigation.navigate("Publicaciones")}
                 />
             )}
             {/* <CardPostulaciones activeOpacity={1} onLongPress={null} isAceppted={null} formData={formData} /> */}

@@ -16,7 +16,7 @@ export default function Welcome2() {
                 <ArrowRight width={24} height={24} fill={"#fff"}/>
             </TouchableOpacity>
             <View style={styles.containerBlur}>
-                <BlurCard text={"Tu aliado para una casa impecable"} indicador={1} nextNavigation={"Welcome3"} txtBtn={"Siguiente"}/>
+                <BlurCard text={"Tu aliado para una casa impecable"} indicador={2} nextNavigation={"Welcome3"} txtBtn={"Siguiente"}/>
             </View>
         </SafeAreaView>
       )

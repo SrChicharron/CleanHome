@@ -200,7 +200,7 @@ export default function Aceptadas({ postulaciones }) {
             mensajeTitulo="No tienes postulaciones aceptadas... ¡por ahora!"
             mensajeDescripcion="Sé paciente, pronto te aceptarán en un trabajo. Por ahora, puedes seguir buscando"
             txtBtn="Empezar a buscar"
-            onPressBtn={() => navigation.navigate("HomeTrabajador")}
+            onPressBtn={() => navigation.navigate("Publicaciones")}
           />
         ))}
       {/* <CardPostulaciones activeOpacity={null} onLongPress={openModal} isAceppted={'aceptado'} formData={formData} /> */}
