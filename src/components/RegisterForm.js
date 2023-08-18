@@ -18,6 +18,7 @@ import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { registrarUsuario } from "../api/RegisterAPI";
 
 const options = [
   { label: "Cliente", value: "ROLE_CLIENTE" },
@@ -83,8 +84,8 @@ export default function RegisterForm() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const handleRegister = () => {
-    const urlRegister =
-      "http://clenhometm.trafficmanager.net:2813/ch/auth/register";
+    //const urlRegister ="http://clenhometm.trafficmanager.net:2813/ch/auth/register";
+    const urlRegister ="http://192.168.0.109:2813/ch/auth";
 
     const userData = {
       username: userName,
@@ -98,47 +99,29 @@ export default function RegisterForm() {
       authorities: [{ authority: userRole, username: userName }],
     };
 
-    console.log(userData);
-
-    fetch(urlRegister, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          if (response.status === 409) {
-            showToastError(
-              "El nombre de usuario o el correo electrónico ya han sido utilizados"
-            );
-            throw new Error(
-              "El nombre de usuario o el correo electrónico ya han sido utilizados"
-            );
-          } else {
-            showToastError(
-              "Error al registrar el usuario,usuario o email ya registrado"
-            );
-            throw new Error(
-              "Error al registrar el usuario,usuario o email ya registrado"
-            );
-          }
-        }
-        return response.json();
-      })
-
-      .then((data) => {
+    registrarUsuario(userData, ine)
+    .then(registerResponse => {
+      console.log(registerResponse.status);
+      if(registerResponse.status===400){
+        showToastError(
+          "El nombre de usuario o el correo electrónico ya han sido utilizados"
+        );
+      }else if(registerResponse.status===200){
         showToastSuccess("Usuario registrado con éxito");
         // Esperar 2 segundos
         setTimeout(() => {
           setRegistrationSuccess(true);
           navigation.navigate("Login");
         }, 5000);
-      })
-      .catch((error) => {
-        showToastError("Error al registrar el usuario");
-      });
+      }
+    })
+    .catch(error => {
+      console.error('Error en el registro:', error);
+      showToastError(
+        "Error al registrar el usuario"
+      );
+    });
+
   };
   return (
     <ScrollView style={styles.container}>
