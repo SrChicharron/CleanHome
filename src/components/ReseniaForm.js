@@ -8,7 +8,7 @@ export default function ReseniaForm(props) {
 
   return (
     <View style={styles.container}>
-      <ProfileCard formData={formData}/>
+      <ProfileCard infoUser={formData}/>
       <StarRating rating={reseniaData.calificacion} onChange={(rating) => handleChange("calificacion", rating)} starSize={54} style={styles.starRating}/>
       <TextInput
         style={{ ...styles.input, ...styles.labelDescripcion }}
