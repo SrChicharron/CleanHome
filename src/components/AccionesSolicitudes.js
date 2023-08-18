@@ -10,7 +10,7 @@ export default function AccionesSolicitudes(props) {
     const {auth,logout} = useAuth()
     const token=auth.token;
     //Usar toggleModal para cerrar el modal
-    const {isModalVisible, toggleModal, id, name} = props;
+    const {isModalVisible, toggleModal, id, name, getSolicitudes} = props;
     const showToastSuccess = () =>{
         Toast.show({
             type:"success",
@@ -53,6 +53,7 @@ export default function AccionesSolicitudes(props) {
             if(response.status==200){
                 showToastSuccess()
                 toggleModal()
+                getSolicitudes()
             }
           
         }).catch(error => {

@@ -7,26 +7,26 @@ import {
 import React, { useState, useEffect } from "react";
 
 export default function EditProfileForm(props) {
-    const { formData, handleChange } = props;
+    const { userData, handleChange } = props;
 
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Nombre</Text>
             <TextInput
                 style={styles.input}
-                value={formData.name}
+                value={userData.name}
                 onChangeText={(text) => handleChange("name", text)}
             />
             <Text style={styles.label}>Apellidos</Text>
             <TextInput
                 style={styles.input}
-                value={formData.lastname}
+                value={userData.lastname}
                 onChangeText={(text) => handleChange("lastname", text)}
             />
             <Text style={styles.label}>Número de celular</Text>
             <TextInput
                 style={styles.input}
-                value={formData.cellphone}
+                value={userData.cellphone}
                 keyboardType="numeric"
                 maxLength={10}
                 onChangeText={(text) => handleChange("cellphone", text)}
@@ -36,7 +36,7 @@ export default function EditProfileForm(props) {
                 style={{ ...styles.input, ...styles.labelDescripcion }}
                 placeholder="Descripción"
                 multiline
-                value={formData.descripcion}
+                value={userData.descripcion}
                 onChangeText={(text) => handleChange("descripcion", text)}
             />
         </View>

@@ -1,102 +1,114 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, ToastAndroid } from 'react-native'
-import React, {useState, useEffect, useCallback} from 'react'
-import { useFocusEffect } from '@react-navigation/native'
-import {FontAwesome, Foundation} from '@expo/vector-icons'
-import ProfileImg from '../../assets/images/welcome1.jpg'
-import ResenaCard from '../../components/ResenaCard'
-import { useNavigation } from '@react-navigation/native';
-import ProfileCard from '../../components/ProfileCard'
-import ModalEditPerfil from '../../components/trabajador/ModalEditPerfil'
-import DataProfile from '../../components/trabajador/DataProfile'
-import useAuth from '../../hooks/UseAuth';
-import axios from 'axios'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
-import  Toast  from 'react-native-toast-message'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Button,
+} from "react-native";
+import React, { useState, useEffect } from "react";
+import ModalEditPerfil from "../../components/trabajador/ModalEditPerfil";
+import ProfileCard from "../../components/ProfileCard";
+import DataProfile from "../../components/trabajador/DataProfile";
+import Toast from 'react-native-toast-message';
+import { getUsuario, updateUsuario } from "../../api/trabajador/CuentaApi";
+import useAuth from "../../hooks/UseAuth";
+
 export default function Cuenta() {
-  const showToast = () => {
-    Toast.show();
-  }
-  const {auth,logout} = useAuth()
-  const token=auth.token;
+  const { auth, logout } = useAuth();
   const [modalVisible, setModalVisible] = useState(false);
-  const [infoUser,setInfoUser] = useState(null);
-  const urlgetInfo =`http://clenhometm.trafficmanager.net:2813/ch/auth/getUsuario/${auth.username}`
-  const [formData, setFormData] = useState({
+  const [originalUserData, setOriginalUserData] = useState({
     name: "",
     lastname: "",
     cellphone: "",
+    birthday: null,
+    username: "",
     descripcion: "",
-    //urlImgProfile: null,
+    foto: null,
   });
-
+  const [userData, setUserData] = useState({
+    name: "",
+    lastname: "",
+    cellphone: "",
+    birthday: null,
+    username: "",
+    descripcion: "",
+    foto: null,
+  })
+  useEffect(() => {
+      getUserData();
+  }, [])
   // Función para actualizar el estado formData cuando cambie algún campo del formulario
   const handleChange = (name, value) => {
-    setFormData({
-      ...formData,
+    setUserData((prevUserData) =>  ({
+      ...prevUserData,
       [name]: value,
-    });
+    }));
+    console.log("handleChange ==> " + JSON.stringify(userData, null, 4))
   };
 
+  // FUNCIÓN PARA OBTENER LA INFORMACIÓN DEL USUARIO
+  const getUserData = async () => {
+    const response = await getUsuario(auth.username);
+    setOriginalUserData(response);
+    setUserData(response);
+    console.log("UserData ====> = " + JSON.stringify(userData, null, 4))
+    console.log("OriginalUserData ====> = " + JSON.stringify(originalUserData, null, 4))
+  }
+  
   // Agregar función para formatear el objeto formData 
-  const formatFormData = () => {
-    setFormData({
-      name: "",
-      lastname: "",
-      cellphone: "",
-      descripcion: "",
-      //urlImgProfile: null,
-    });
+  const formatUserData = () => {
+    setUserData({...originalUserData});
   }
 
   const openModal = () => {
     setModalVisible(true);
-    setFormData({
-      name: infoUser.name,
-      lastname: infoUser.lastname,
-      cellphone: infoUser.cellphone,
-      descripcion: infoUser.descripcion
-    })
   };
 
   const closeModal = () => {
     setModalVisible(false);
-    formatFormData();
+    formatUserData();
   };
 
-  const getInfoUsuario= async () => {
-    try{
-      //const response = await axios.get(urlgetInfo);
-      const response = await axios.get(urlgetInfo,
-        {
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers":
-              "POST, GET, PUT, DELETE, OPTIONS, HEAD, Authorization, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Allow-Origin",
-            "Content-Type": "application/json",
-            'Authorization':`Bearer ${token}`
-          }
-        });
-      setInfoUser(response.data);
-    }catch(error){
-        console.log(error)
+
+  // FUNCIÓN PARA EDITAR A UN USUARIO
+  const editUsuario = async () => {
+    const editUserData = {
+      ...userData,
     }
-  };
+    try {
+      const response = await updateUsuario(editUserData, auth.username, auth.token);
+      showToastSuccess();
+      //Asignar el nuevo usuario al estado originalUserData. Por el momento no regresa el usuario por lo que se le asignó la copia
+      setOriginalUserData(editUserData);
+      closeModal();
+  } catch (error) {
+      console.log(error);
+      showToastError();
+      closeModal();
+  }
+  }
 
-  useEffect(() => {
-    getInfoUsuario();
-  });
+  const showToastSuccess = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Actualizado',
+      text2: 'Tu información se ha actualizado correctamente 🥳'
+    });
+  }
 
-  // useFocusEffect(
-  //   useCallback(()=>{
-  //       getInfoUsuario();
-  //   })
-  // );
-
+  const showToastError = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: 'Ha ocurrido un error al actualizar tu información 😥'
+    });
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.containerLinkAdd}>
-      <TouchableOpacity
+        <TouchableOpacity
           style={styles.containerBtnLinkAdd}
           onPress={openModal}
         >
@@ -110,23 +122,23 @@ export default function Cuenta() {
         </TouchableOpacity>
       </View>
       <ProfileCard 
-        formData={formData}
-        handleChange={handleChange}
-        auth={auth}
-        infoUser={infoUser}
+        userData={originalUserData}
+        infoUser={originalUserData}
         />
 
-        <DataProfile auth={auth} infoUser={infoUser} formData={formData} titleResenias={"Lo que dicen los trabajadores sobre mi"}/>
+        <DataProfile userData={originalUserData} infoUser={originalUserData} titleResenias={"Lo que dicen los anfitriones sobre mi"}/>
 
       <ModalEditPerfil 
         modalVisible={modalVisible}
         closeModal={closeModal}
-        formData={formData}
+        userData={userData}
+        infoUser={userData}
         handleChange={handleChange}
-        infoUser={infoUser}
-        auth={auth}
+        editUsuario={editUsuario}
       />
-      <Toast topOffset={20}/>
+      <Toast
+        topOffset={20}
+      />
     </ScrollView>
   )
 }
@@ -138,8 +150,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   containerLinkAdd: {
-    flexDirection:'row-reverse',
-    justifyContent:"space-between"
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-between',
   },
   containerBtnLinkAdd: {
     borderRadius: 8,

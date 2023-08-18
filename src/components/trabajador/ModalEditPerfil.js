@@ -1,5 +1,4 @@
 import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Alert, Button } from "react-native";
-
 import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -8,9 +7,11 @@ import { faXmark, faCamera } from "@fortawesome/free-solid-svg-icons";
 import EditProfileForm from "./EditProfileForm";
 import axios from "axios";
 import Toast from 'react-native-toast-message'
+import useAuth from "../../hooks/UseAuth";
 
 export default function ModalEditPerfil(props) {
-    const { modalVisible, closeModal, formData, handleChange, auth, infoUser } = props;
+    const { auth, logout } = useAuth();
+    const { modalVisible, closeModal, userData, handleChange, infoUser, editUsuario } = props;
     const token=auth.token;
     const showToastSucces = () =>{
         Toast.show({
@@ -74,7 +75,7 @@ export default function ModalEditPerfil(props) {
                     </TouchableOpacity>
                     <KeyboardAwareScrollView style={styles.bodyModal}>
                         {/* Formulario para crear una nueva publicación */}
-                        <EditProfileForm userData={userData} handleChange={handleChange} />
+                        <EditProfileForm userData={userData} infoUser={infoUser} handleChange={handleChange} />
                     </KeyboardAwareScrollView>
                     <View style={styles.footerModal}>
                         {/* Botones para publicar y cancelar */}

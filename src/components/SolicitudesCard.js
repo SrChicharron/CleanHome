@@ -10,7 +10,7 @@ import useAuth from '../hooks/UseAuth';
 export default function SolicitudesCard(props) {
   const {auth,logout} = useAuth()
     const token=auth.token;
-    const {solicitudes} = props
+    const {solicitudes, getSolicitudes} = props
     const [isModalVisible, setModalVisible] = useState(false);
     let idEmpleado = solicitudes.empleado.id;
     // Variables de prueba para que funcione el componente de status y estrellas -----
@@ -71,9 +71,9 @@ export default function SolicitudesCard(props) {
               styles.containerIsApproved,
               {
                 backgroundColor:
-                estatus === "aprobado"
+                estatus === "aprobada"
                     ? "#D4F4E2"
-                    : estatus === `finalizado`
+                    : estatus === `finalizada`
                     ? "#075493"
                     : "#E6E6E6",
               },
@@ -83,7 +83,7 @@ export default function SolicitudesCard(props) {
               styles.txtIsApproved,
               {
                 color:
-                estatus === `finalizado`
+                estatus === `finalizada`
                     ? "#fff"
                     : "#000",
               },
@@ -95,10 +95,6 @@ export default function SolicitudesCard(props) {
             <Text style={styles.textNombre}>{solicitudes.empleado.name} {solicitudes.empleado.lastname}</Text>
             <Text style={styles.textRol}>Celular: {solicitudes.empleado.cellphone}</Text>
 
-            <View style={styles.viewStars}>
-                <StarRating rating={calificacion[0]} /*onChange={(rating) => handleChange("calificacion", rating)}*/ starSize={30} style={styles.starRating}/>
-            </View>
-
             <Text style={styles.textDescripcion}>{solicitudes.empleado.name} se postuló para <Text style={{fontWeight:'bold'}}>{solicitudes.propiedad.titulo}</Text> ubicado en {solicitudes.propiedad.calle} #{solicitudes.propiedad.numeroExt} Col. {solicitudes.propiedad.colonia} {solicitudes.propiedad.codigoPostal}, {solicitudes.propiedad.estado.estado}</Text>
         </View>
 
@@ -106,7 +102,7 @@ export default function SolicitudesCard(props) {
     </View>
         
     </TouchableWithoutFeedback>
-    <AccionesSolicitudes isModalVisible={isModalVisible} toggleModal={toggleModal} id={id} name={name}/>
+    <AccionesSolicitudes isModalVisible={isModalVisible} toggleModal={toggleModal} id={id} name={name} getSolicitudes={getSolicitudes}/>
     </>
   )
 }
