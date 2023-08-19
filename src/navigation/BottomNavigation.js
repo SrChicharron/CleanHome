@@ -6,8 +6,8 @@ import HomeTrabajador from "../screens/trabajador/Home";
 import HomeCliente from "../screens/cliente/Home";
 import CuentaTrabajador from "../screens/trabajador/Cuenta";
 import CuentaCliente from "../screens/cliente/Cuenta";
+import Solicitudes from "../screens/cliente/Solicitudes";
 import PostulacionesTrabajador from "../screens/trabajador/Postulaciones";
-import SolicitudesCliente from "../screens/cliente/Solicitudes";
 import PropiedadesCliente from "../screens/cliente/Propiedades";
 import NavigationTrabajador from "./NavigationTrabajador";
 import NavigationCliente from "./NavigationCliente";
@@ -102,7 +102,7 @@ export default function BottomNavigation({ userRole }) {
                     />
                     <Tab.Screen
                         name="Solictudes"
-                        component={SolicitudesCliente}
+                        component={Solicitudes}
                         options={{
                             tabBarLabel: "Solicitudes",
                             tabBarIcon: ({ focused, color, size }) => (

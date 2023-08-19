@@ -6,6 +6,7 @@ import { faPenToSquare, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 export default function AccionesModal(props) {
   const { modalOptionVisible, closeModalOptions, txtBtnBlue, txtBtnRed, onPressBlue, onPressRed, publicacion } = props;
+  
   return (
     <Modal
       animationType="slide"

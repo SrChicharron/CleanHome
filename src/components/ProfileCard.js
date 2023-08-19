@@ -2,9 +2,11 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from "react";
 import VerificateIcon from '../assets/icons/VerificateIcon.svg'
 import AvatarH from "../assets/images/AvatarH.png";
+import useAuth from "../hooks/UseAuth";
 
 export default function ProfileCard( props ) {
-    const { formData, handleChange, auth, infoUser } = props; 
+    const { formData, handleChange, infoUser } = props; 
+    const { auth } = useAuth();
 console.log("Esto es lo que llega a Profile card : === > " + JSON.stringify(infoUser, null , 4))
 
   return (
@@ -13,8 +15,8 @@ console.log("Esto es lo que llega a Profile card : === > " + JSON.stringify(info
             <Image source={AvatarH} style={styles.profileImg}/>
             <VerificateIcon height={30} width={30} style={styles.iconVerif}/>
         </View>
-        <Text style={styles.txtName}>{infoUser.name} {infoUser.lastname}</Text>
-        <Text style={styles.txtRol}>{infoUser.username}</Text>
+        <Text style={styles.txtName}>{auth.email} {infoUser.lastname}</Text>
+        <Text style={styles.txtRol}>{auth.username}</Text>
     </View>
   )
 }
